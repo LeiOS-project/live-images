@@ -29,3 +29,8 @@ source*.tar*
 source*.contents
 source*.packages
 source*.zsync
+
+
+config/package-lists/live.list.chroot
+config/hooks/live
+config/hooks/normal
