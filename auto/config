@@ -25,7 +25,6 @@ lb config noauto \
 	--firmware-chroot true \
 	--initramfs live-boot \
 	--linux-packages "linux-image linux-headers" \
-	--bootappend-live "boot=live config splash" \
 	--memtest memtest86+ \
 	--iso-publisher LeiCraft_MC \
 	--iso-application "LeiOS" \
