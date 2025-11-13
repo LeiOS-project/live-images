@@ -10,8 +10,8 @@ lb config noauto \
 	--security true \
 	--updates true \
 	--source false \
-	--mirror-binary "http://deb.debian.org/debian/" \
-	--mirror-bootstrap "http://deb.debian.org/debian/" \
+	--mirror-binary "https://deb.debian.org/debian" \
+	--mirror-bootstrap "https://deb.debian.org/debian" \
 	--archive-areas "main contrib non-free non-free-firmware" \
 	--binary-filesystem ext4 \
 	--binary-images iso-hybrid \
