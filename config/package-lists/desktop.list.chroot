@@ -1,9 +1,5 @@
 task-kde-desktop
-
-# task-print-server
-cups
-cups-client
-system-config-printer
+task-print-server
 
 plymouth
 plymouth-x11

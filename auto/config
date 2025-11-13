@@ -6,7 +6,7 @@ lb config noauto \
 	--clean \
 	--ignore-system-defaults \
 	--mode debian \
-	--distribution stable \
+	--distribution trixie \
 	--debian-installer live \
 	--linux-packages "linux-image linux-headers" \
 	--mirror-bootstrap https://deb.debian.org/debian \
