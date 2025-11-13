@@ -52,7 +52,7 @@ firmware-misc-nonfree
 firmware-realtek
 firmware-sof-signed
 gcc-14-base
-gcm
+# gcm
 gettext-base
 git
 gnome-snapshot
