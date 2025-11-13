@@ -3,16 +3,34 @@
 set -e
 
 lb config noauto \
-	--clean \
-	--ignore-system-defaults \
-	--mode debian \
-	--distribution trixie \
-	--debian-installer live \
-	--linux-packages "linux-image linux-headers" \
-	--mirror-bootstrap https://deb.debian.org/debian \
-    --mirror-chroot https://deb.debian.org/debian \
-	--archive-areas "main contrib non-free non-free-firmware" \
+	--apt-recommends false \
+	--apt-indices false \
+	--architectures amd64 \
+	--archive-areas 'main contrib non-free non-free-firmware' \
 	--backports true \
+	--security true \
+	--updates true \
+	--source false \
+	--binary-filesystem ext4 \
+	--binary-images iso-hybrid \
+	--checksums sha256 \
+	--clean \
+	--debconf-frontend noninteractive \
+	--debian-installer live \
+	--debian-installer-distribution bookworm \
+	--debian-installer-gui true \
+	--debootstrap-options "--include=apt-transport-https,ca-certificates,openssl" \
+	--distribution bookworm \
+	--firmware-binary true \
+	--firmware-chroot true \
+	--initramfs live-boot \
+	--iso-publisher debian-live-config \
+	--iso-volume debian-live-config-4.2.1 \
+	--linux-packages "linux-image linux-headers" \
+	--bootappend-live "boot=live config splash" \
+	--memtest memtest86+ \
+	--win32-loader true
 	--iso-publisher LeiCraft_MC \
-	--iso-volume LeiOS-0.1.0 \
+	--iso-volume LeiOS-0.1.0
+
 "${@}"
