@@ -112,3 +112,13 @@ user-setup
 live-tools
 eject
 #Alt: installation-birthday
+
+
+
+# audio
+pavucontrol
+pulseaudio
+pulseaudio-utils
+pulseaudio-module-bluetooth
+pulseaudio-module-lirc
+pulseaudio-module-jack
