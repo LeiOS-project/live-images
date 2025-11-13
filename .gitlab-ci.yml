@@ -17,18 +17,9 @@ build-live-iso:
   allow_failure: false
   before_script:
     - apt-get update
-    - |
-      apt-get install -y --no-install-recommends \
-        git tar wget ca-certificates \
-        live-build \
-        squashfs-tools \
-        debootstrap \
-        xorriso \
-        syslinux-common \
-        isolinux \
-        mtools \
-        dosfstools \
-        genisoimage
+    - apt-get install -y --no-install-recommends git tar wget ca-certificates
+    - apt-get install -y --no-install-recommends live-build squashfs-tools debootstrap xorriso
+    - apt-get install -y --no-install-recommends syslinux-common isolinux mtools dosfstools genisoimage
   script:
     # Clean up old builds safely
     - ./auto/clean || true
