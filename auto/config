@@ -4,8 +4,6 @@ set -e
 
 lb config noauto \
 	--clean \
-	--apt-recommends false \
-	--apt-indices false \
 	--architectures amd64 \
 	--archive-areas 'main contrib non-free non-free-firmware' \
 	--backports true \
