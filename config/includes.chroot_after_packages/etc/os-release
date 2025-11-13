@@ -1,0 +1,11 @@
+PRETTY_NAME="LeiOS 0.1.0"
+NAME="LeiOS"
+VERSION="0.1.0"
+VERSION_CODENAME=testing
+VERSION_ID="0.1.0"
+ID=leios
+ID_LIKE=debian
+IMAGE_ID=live
+HOME_URL="https://git.leicraftmc.de/LeiOS"
+SUPPORT_URL="https://git.leicraftmc.de/LeiOS"
+BUG_REPORT_URL="https://git.leicraftmc.de/LeiOS"
