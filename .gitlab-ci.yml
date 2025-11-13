@@ -21,6 +21,7 @@ build-live-iso:
     - apt-get install -y --no-install-recommends live-build squashfs-tools debootstrap xorriso
     - apt-get install -y --no-install-recommends syslinux-common isolinux mtools dosfstools genisoimage
   script:
+    - pwd
     # Make sure scripts are executable
     - chmod +x ./auto/*.sh
 
