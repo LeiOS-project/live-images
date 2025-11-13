@@ -9,6 +9,8 @@ lb config noauto \
 	--distribution stable \
 	--debian-installer live \
 	--linux-packages "linux-image linux-headers" \
+	--mirror-bootstrap https://deb.debian.org/debian \
+    --mirror-chroot https://deb.debian.org/debian \
 	--iso-publisher LeiCraft_MC \
 	--iso-volume LeiOS-0.1.0 \
 "${@}"
