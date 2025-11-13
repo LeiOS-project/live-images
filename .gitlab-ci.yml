@@ -20,8 +20,10 @@ build-live-iso:
     - apt-get install -y --no-install-recommends git tar wget ca-certificates
     - apt-get install -y --no-install-recommends live-build squashfs-tools debootstrap xorriso
     - apt-get install -y --no-install-recommends syslinux-common isolinux mtools dosfstools genisoimage
-    - chmod +x ./auto/*.sh
   script:
+    # Make sure scripts are executable
+    - chmod +x ./auto/*.sh
+
     # Clean up old builds safely
     - ./auto/clean || true
 
