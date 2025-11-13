@@ -4,12 +4,15 @@ set -e
 
 lb config noauto \
 	--clean \
+	--distribution trixie \
 	--architectures amd64 \
-	--archive-areas 'main contrib non-free non-free-firmware' \
 	--backports true \
 	--security true \
 	--updates true \
 	--source false \
+	--mirror-binary "http://deb.debian.org/debian/" \
+	--mirror-bootstrap "http://deb.debian.org/debian/" \
+	--archive-areas "main contrib non-free non-free-firmware" \
 	--binary-filesystem ext4 \
 	--binary-images iso-hybrid \
 	--checksums sha256 \
@@ -18,7 +21,6 @@ lb config noauto \
 	--debian-installer-distribution trixie \
 	--debian-installer-gui true \
 	--debootstrap-options "--include=apt-transport-https,ca-certificates,openssl" \
-	--distribution trixie \
 	--firmware-binary true \
 	--firmware-chroot true \
 	--initramfs live-boot \
