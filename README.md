@@ -1,18 +1,81 @@
-# LeiOS Live-Images
+# LeiOS Live Images
 
-A software called live-build can be used to automatically build images from
-this configuration tree.
+LeiOS Live Images uses Debian's `live-build` tooling to assemble bootable ISO
+and PXE images for LeiOS. This repository contains the configuration tree that
+`live-build` consumes, along with helper scripts for the usual build workflow.
 
-live-build can be obtained from <https://salsa.debian.org/live-team/live-build>.
-On Debian based systems, live-build can be installed with:
+## Prerequisites
 
-  # apt-get install live-build
+- Debian or Ubuntu based build host (recommended: Debian stable or testing)
+- `sudo` access for installing dependencies and running `lb` commands
+- Required packages:
+  - `live-build`
+  - `debootstrap`
+  - `squashfs-tools`
+  - `xorriso`
+  - `syslinux-common`
 
-live-build can be used to build this image with the following command executed
-in this directory::
+Install the core tooling on Debian based systems with:
 
-  # lb build
+```bash
+sudo apt-get update
+sudo apt-get install live-build debootstrap squashfs-tools xorriso syslinux-common
+```
 
-More information about live-build and the Live Systems project can be found on
-its homepage at <https://wiki.debian.org/DebianLive> and in the manual at
-<https://live-team.pages.debian.net/live-manual/>.
+## Quick Start
+
+```bash
+# Configure the build (only required the first time or after config changes)
+sudo lb config
+
+# Build the ISO image (run from the repository root)
+sudo lb build
+```
+
+The resulting images appear under `live-image-*` directories at the repository
+root. Use `sudo lb clean` to remove build artifacts, or run the helper scripts in
+`auto/`:
+
+- `auto/config` mirrors `lb config`
+- `auto/build` wraps `lb build`
+- `auto/clean` performs a full clean cycle
+
+For reproducible builds, run `sudo lb clean --purge` to drop cached packages
+before rebuilding.
+
+## Repository Layout
+
+- `config/`: Main live-build configuration tree
+  - `binary/`, `bootstrap/`, `chroot/`, `common/`, `source/`: Stage specific
+    configuration snippets consumed by `lb`
+  - `bootloaders/`: Menu and binary assets for extlinux, isolinux, pxelinux, and
+    syslinux targets
+  - `hooks/`: Chroot hooks executed during image creation (package cache updates,
+    cleanup tasks, etc.)
+  - `package-lists/`: Package selections grouped by image profile
+- `auto/`: Shell wrappers for repeatable configure/build/clean invocations
+
+Generated `live-image-*` directories can be removed safely; re-run the build to
+regenerate them.
+
+## Customization
+
+- Adjust package selections in `config/package-lists/` to add or remove software
+- Modify boot menus under `config/bootloaders/*/`
+- Update chroot behavior by editing scripts in `config/hooks/`
+- Override lower-level defaults via snippets in `config/common/` or other stage
+  directories
+
+After changing configuration files, rerun `sudo lb config` before rebuilding.
+
+## Troubleshooting
+
+- Ensure `/tmp` and the working directory have several gigabytes of free space
+- Clear stale artifacts with `sudo lb clean --purge` if builds fail unexpectedly
+- Inspect `/var/log/live-build.log` inside the build tree for detailed errors
+
+## Useful Links
+
+- Live Systems project: <https://wiki.debian.org/DebianLive>
+- live-build documentation: <https://live-team.pages.debian.net/live-manual/>
+- live-build source: <https://salsa.debian.org/live-team/live-build>
