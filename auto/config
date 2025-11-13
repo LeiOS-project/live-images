@@ -11,6 +11,8 @@ lb config noauto \
 	--linux-packages "linux-image linux-headers" \
 	--mirror-bootstrap https://deb.debian.org/debian \
     --mirror-chroot https://deb.debian.org/debian \
+	--archive-areas "main contrib non-free non-free-firmware" \
+	--backports true \
 	--iso-publisher LeiCraft_MC \
 	--iso-volume LeiOS-0.1.0 \
 "${@}"
