@@ -10,5 +10,5 @@ rm -f config/control
 rm -f build.log
 
 
-rm -rf ./.build/
-rm -rf ./cache/
+#rm -rf ./.build/
+#rm -rf ./cache/
