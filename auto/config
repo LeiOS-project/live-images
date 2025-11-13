@@ -24,12 +24,13 @@ lb config noauto \
 	--firmware-binary true \
 	--firmware-chroot true \
 	--initramfs live-boot \
-	--iso-publisher debian-live-config \
-	--iso-volume debian-live-config-4.2.1 \
 	--linux-packages "linux-image linux-headers" \
 	--bootappend-live "boot=live config splash" \
 	--memtest memtest86+ \
 	--iso-publisher LeiCraft_MC \
-	--iso-volume LeiOS-0.1.0
+	--iso-application "LeiOS" \
+	--iso-volume LeiOS 0.1.0 AMD64 \
+	--bootloaders "grub-pc grub-efi" \
+	--bootappend-live "boot=live components quiet username=user hostname=leios" \
 
 "${@}"
