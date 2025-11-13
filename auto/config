@@ -16,7 +16,10 @@ lb config noauto \
 	--clean \
 	--ignore-system-defaults \
 	--mode debian \
+	--distribution stable \
 	--debian-installer live \
 	--linux-packages "linux-image linux-headers" \
 	--source "${_SOURCE}" \
+	--iso-publisher LeiCraft_MC \
+	--iso-volume LeiOS-0.1.0 \
 "${@}"
