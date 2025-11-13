@@ -1,0 +1,48 @@
+image: debian:trixie-slim
+
+stages:
+  - build
+
+variables:
+  DEBIAN_FRONTEND: noninteractive
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web"
+    - when: never
+
+build-live-iso:
+  stage: build
+  when: manual
+  allow_failure: false
+  before_script:
+    - apt-get update
+    - apt-get install -y --no-install-recommends \
+        git tar wget ca-certificates \
+        live-build \
+        squashfs-tools \
+        debootstrap \
+        xorriso \
+        syslinux-common \
+        isolinux \
+        mtools \
+        dosfstools \
+        genisoimage
+  script:
+    # Clean up old builds safely
+    - ./auto/clean || true
+
+    # Configure live-build (ensure config exists)
+    - ./auto/config
+
+    # Force use of ar extractor in case dpkg-deb misbehaves
+    - echo 'LB_BOOTSTRAP_EXTRACTOR=ar' >> auto/config
+
+    # Build the ISO
+    - lb build
+  artifacts:
+    paths:
+      - live-image-*.hybrid.iso
+      - live-image-*.iso
+      - live-image-*.tar
+    expire_in: 3 days
