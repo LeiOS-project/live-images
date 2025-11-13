@@ -1,6 +1,62 @@
 #Title: System
 
+#Section: Package management
+#Description: gnome-packagekit
+#Description: synaptic
+apt-listchanges
+apt-transport-https
+aptitude
+debian-archive-keyring
+debian-keyring
 
+htop
+iotop
+lm-sensors
+lsof
+memtest86+
+
+gparted
+smartmontools
+
+
+#Section: Boot screen
+plymouth
+plymouth-x11
+plymouth-themes
+
+
+sudo
+
+
+#Section: Display
+mesa-utils
+libgl1-mesa-dri
+va-driver-all
+xinput
+xorg
+xinit
+xfonts-base
+xfonts-scalable
+xfonts-75dpi
+xfonts-100dpi
+xserver-xorg
+xserver-xorg-input-all
+xserver-xorg-input-wacom
+xserver-xorg-input-aiptek
+xserver-xorg-input-elographics
+xserver-xorg-input-joystick
+xserver-xorg-input-kbd
+xserver-xorg-input-mouse
+xserver-xorg-input-mutouch
+xserver-xorg-input-multitouch
+xserver-xorg-input-synaptics
+xserver-xorg-video-all
+xserver-xorg-video-intel
+xfonts-base
+hwdata
+#Alt: nvidia-driver
+#Alt: nvidia-vaapi-driver
+#corctrl # sid only
 
 #Section: Kernel/boot/init
 #if ARCHITECTURES amd64
