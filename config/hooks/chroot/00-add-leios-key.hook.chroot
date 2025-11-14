@@ -1,3 +1,0 @@
-#!/bin/bash
-# Add Leios repo GPG key
-wget -qO- https://repo.leios.dev/public-key.gpg | gpg --dearmor > /usr/share/keyrings/leios-archive-keyring.gpg
