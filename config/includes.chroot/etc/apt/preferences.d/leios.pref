@@ -1,0 +1,3 @@
+Package: *
+Pin: origin repo.leios.dev
+Pin-Priority: 501
