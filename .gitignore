@@ -34,3 +34,9 @@ source*.zsync
 config/hooks/live
 config/hooks/normal
 .lock
+
+.env
+
+.bin/
+
+node_modules/

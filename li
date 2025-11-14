@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -euo pipefail
+
+# check if bun is installed
+if ! command -v bun &> /dev/null
+then
+    # ask to install bun
+    read -p "Bun is not installed. Do you want to install it now? (y/n) " yn
+    case $yn in
+        [Yy]* )
+            # install bun
+            curl -fsSL https://bun.sh/install | bash
+            export PATH="$HOME/.bun/bin:$PATH"
+            ;;
+        * )
+            echo "Bun is required to run this script. Exiting."
+            exit 1
+            ;;
+    esac
+fi
+
+bun ./scripts/index.ts "$@"

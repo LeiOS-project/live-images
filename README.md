@@ -14,6 +14,7 @@ and PXE images for LeiOS. This repository contains the configuration tree that
   - `squashfs-tools`
   - `xorriso`
   - `syslinux-common`
+  - `bun`
 
 Install the core tooling on Debian based systems with:
 
