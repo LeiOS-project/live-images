@@ -2,11 +2,6 @@
 
 set -e
 
-#!/bin/bash
-mkdir -p config/includes.chroot/usr/share/keyrings
-curl -fsSL https://repo.leios.dev/public-key.gpg | gpg --dearmor -o config/includes.chroot/usr/share/keyrings/leios-archive-keyring.gpg
-
-
 lb config noauto \
 	--clean \
 	--distribution trixie \
