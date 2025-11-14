@@ -4,6 +4,7 @@ set -e
 
 mkdir -p config/hooks/normal/
 cp ./config/hooks/*.hook.chroot config/hooks/normal/
+chmod +x config/hooks/normal/*.hook.chroot
 
 lb config noauto \
 	--clean \

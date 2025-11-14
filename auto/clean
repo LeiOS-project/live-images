@@ -12,3 +12,6 @@ rm -f build.log
 
 #rm -rf ./.build/
 #rm -rf ./cache/
+
+rm -rf ./config/hooks/normal/
+rm -rf ./config/hooks/live/
