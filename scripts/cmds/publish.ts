@@ -14,7 +14,7 @@ export class PublishCMD extends CLICMD {
         const GIT_DEPLOY_KEY_SECRET = Utils.requireEnvVariable("GIT_DEPLOY_KEY_SECRET");
 
         const files = this.getFilesWithVersion(await fs_readdir("."));
-
+        console.log("Found files:", files);
     }
 
     private getFilesWithVersion(files: string[]): { file: string, version: string }[] {
