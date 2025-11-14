@@ -31,8 +31,8 @@ lb config noauto \
 	--memtest memtest86+ \
 	--iso-publisher LeiCraft_MC \
 	--iso-application "LeiOS" \
-	--iso-volume LeiOS 0.5.0 AMD64 \
-	--image-name leios-0.5.0-amd64.hybrid.iso \
+	--iso-volume LeiOS 0.5.1 AMD64 \
+	--image-name leios-0.5.1 \
 	--bootloaders "grub-pc grub-efi" \
 	--bootappend-live "boot=live components quiet username=user hostname=leios" \
 
