@@ -1,0 +1,1 @@
+deb [signed-by=/usr/share/keyrings/leios-archive-keyring.gpg] https://repo.leios.dev/leios testing main
