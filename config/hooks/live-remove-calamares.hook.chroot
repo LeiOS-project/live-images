@@ -1,3 +1,0 @@
-#!/bin/bash
-# Remove Calamares from the live filesystem before installation
-rm -rf /usr/bin/calamares /usr/share/calamares /etc/calamares
