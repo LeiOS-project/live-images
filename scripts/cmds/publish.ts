@@ -58,7 +58,7 @@ export class PublishCMD extends CLICMD {
             if (versionFiles.length !== requiredFiles.length) {
                 continue;
             }
-            
+
             // results[version] = versionFiles.filter(f => !existingFiles.includes(f));
 
             const toUpload = [];
@@ -110,25 +110,50 @@ export class PublishCMD extends CLICMD {
         }
     }
 
-    private async getExistingFiles() {
+    private async getExistingFiles(requestedVersions: string[]): Promise<Record<string, string[]>> {
 
-        const response = await fetch("https://git.leicraftmc.de/api/v4/projects/5/packages/2/package_files");
+        const response = await fetch("https://git.leicraftmc.de/api/v4/projects/5/packages");
         if (!response.ok) {
-            throw new Error(`Failed to fetch existing files: ${response.status} ${response.statusText}`);
+            throw new Error(`Failed to fetch packages: ${response.status} ${response.statusText}`);
         }
-
-        const data = await response.json() as Array<{
+        const verionsData = await response.json() as Array<{
             id: number,
-            package_id: number,
+            name: string,
+            version: string,
+            package_type: string,
+            status: string,
+            _links: Record<string, string>,
             created_at: string,
-            file_name: string,
-            size: number,
-            file_md5: string | null,
-            file_sha1: string | null,
-            file_sha256: string | null
+            last_downloaded_at: string,
+            tags: []
         }>;
 
-        return data.map(file => file.file_name);
+        const result: Record<string, string[]> = {};
+
+        for (const pkg of verionsData) {
+            if (!requestedVersions.includes(pkg.version) || pkg.package_type !== "generic" || pkg.name !== "releases") {
+                continue;
+            }
+            const response = await fetch(`https://git.leicraftmc.de/api/v4/projects/5/packages/${pkg.id}/package_files`);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch existing files: ${response.status} ${response.statusText}`);
+            }
+
+            const data = await response.json() as Array<{
+                id: number,
+                package_id: number,
+                created_at: string,
+                file_name: string,
+                size: number,
+                file_md5: string | null,
+                file_sha1: string | null,
+                file_sha256: string | null
+            }>;
+
+            result[pkg.version] = data.map(file => file.file_name);
+        }
+
+        return result
     }
 
 }
