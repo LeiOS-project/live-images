@@ -69,6 +69,9 @@ export class PublishCMD extends CLICMD {
                     console.log(`File ${file} for version ${version} already exists, skipping upload.`);
                 }
             }
+            if (toUpload.length === 0) {
+                continue;
+            }
             results[version] = toUpload;
 
         }
