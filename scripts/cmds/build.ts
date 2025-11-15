@@ -7,6 +7,8 @@ export class BuildCMD extends CLICMD {
     override usage = "build";
 
     override async run(args: string[], meta: any) {
-        await Bun.$`lb clean --purge`;
+        await Bun.$`lb clean --all`;
+        await Bun.$`lb config`;
+        await Bun.$`lb build`;
     }
 }
