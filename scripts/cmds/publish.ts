@@ -10,9 +10,6 @@ export class PublishCMD extends CLICMD {
 
     override async run(args: string[], meta: CLICMDExecMeta) {
 
-        const GIT_DEPLOY_KEY_ID = Utils.requireEnvVariable("GIT_DEPLOY_KEY_ID");
-        const GIT_DEPLOY_KEY_SECRET = Utils.requireEnvVariable("GIT_DEPLOY_KEY_SECRET");
-
         const files = await this.checkFiles(await fs_readdir("."));
         
         for (const [version, versionFiles] of Object.entries(files)) {
@@ -75,6 +72,9 @@ export class PublishCMD extends CLICMD {
     }
 
     private async uploadFile(version: string, file: string) {
+
+        const GIT_DEPLOY_KEY_ID = Utils.requireEnvVariable("GIT_DEPLOY_KEY_ID");
+        const GIT_DEPLOY_KEY_SECRET = Utils.requireEnvVariable("GIT_DEPLOY_KEY_SECRET");
 
         const res = await fetch(
             `https://git.leicraftmc.de/api/v4/projects/5/packages/generic/releases/${version}/${file}`,
