@@ -9,4 +9,4 @@ Exec=/usr/bin/calamares
 Terminal=false
 MultipleArgs=false
 Type=Application
-Categories=Applications;System
+Categories=Applications;System  
