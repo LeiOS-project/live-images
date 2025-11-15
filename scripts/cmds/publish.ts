@@ -11,7 +11,7 @@ export class PublishCMD extends CLICMD {
     override async run(args: string[], meta: CLICMDExecMeta) {
 
         const files = await this.checkFiles(await fs_readdir("."));
-        
+
         for (const [version, versionFiles] of Object.entries(files)) {
             console.log(`Uploading files for version ${version}...`);
             await this.uploadFiles(version, versionFiles);
@@ -38,6 +38,9 @@ export class PublishCMD extends CLICMD {
             }
         }
 
+
+        const existingFiles = await this.getExistingFiles();
+
         const results: Record<string, string[]> = {};
 
         for (const [version, versionFiles] of Object.entries(versions)) {
@@ -55,7 +58,19 @@ export class PublishCMD extends CLICMD {
             if (versionFiles.length !== requiredFiles.length) {
                 continue;
             }
-            results[version] = versionFiles;
+            
+            // results[version] = versionFiles.filter(f => !existingFiles.includes(f));
+
+            const toUpload = [];
+            for (const file of versionFiles) {
+                if (!existingFiles.includes(file)) {
+                    toUpload.push(file);
+                } else {
+                    console.log(`File ${file} for version ${version} already exists, skipping upload.`);
+                }
+            }
+            results[version] = toUpload;
+
         }
         return results;
     }
@@ -90,6 +105,27 @@ export class PublishCMD extends CLICMD {
         } else {
             console.log(`Uploaded file ${file} for version ${version}.`);
         }
+    }
+
+    private async getExistingFiles() {
+
+        const response = await fetch("https://git.leicraftmc.de/api/v4/projects/5/packages/2/package_files");
+        if (!response.ok) {
+            throw new Error(`Failed to fetch existing files: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json() as Array<{
+            id: number,
+            package_id: number,
+            created_at: string,
+            file_name: string,
+            size: number,
+            file_md5: string | null,
+            file_sha1: string | null,
+            file_sha256: string | null
+        }>;
+
+        return data.map(file => file.file_name);
     }
 
 }
