@@ -1,6 +1,6 @@
 import { CLICMD, type CLICMDExecMeta } from "@cleverjs/cli";
 import { Utils } from "../utils";
-import { readdir as fs_readdir } from "fs/promises";
+import { readdir as fs_readdir, readFile } from "fs/promises";
 
 export class PublishCMD extends CLICMD {
 
@@ -14,7 +14,11 @@ export class PublishCMD extends CLICMD {
         const GIT_DEPLOY_KEY_SECRET = Utils.requireEnvVariable("GIT_DEPLOY_KEY_SECRET");
 
         const files = await this.checkFiles(await fs_readdir("."));
-        console.log("Found files:", files);
+        
+        for (const [version, versionFiles] of Object.entries(files)) {
+            console.log(`Uploading files for version ${version}...`);
+            await this.uploadFiles(version, versionFiles);
+        }
     }
 
     private async checkFiles(files: string[]) {
@@ -29,7 +33,7 @@ export class PublishCMD extends CLICMD {
                 if (typeof version !== "string") {
                     continue;
                 }
-                
+
                 if (!versions[version]) {
                     versions[version] = [];
                 }
@@ -57,6 +61,39 @@ export class PublishCMD extends CLICMD {
             results[version] = versionFiles;
         }
         return results;
+    }
+
+    private async uploadFiles(version: string, files: string[]) {
+
+        const promises: Promise<void>[] = [];
+
+        for (const file of files) {
+            promises.push(this.uploadFile(version, file));
+        }
+
+        await Promise.all(promises);
+    }
+
+    private async uploadFile(version: string, file: string) {
+
+        const res = await fetch(
+            `https://git.leicraftmc.de/api/v4/projects/5/packages/generic/releases/${version}/${file}`,
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/octet-stream",
+                    "Authorization": "Basic " +
+                        Buffer.from(`${GIT_DEPLOY_KEY_ID}:${GIT_DEPLOY_KEY_SECRET}`).toString("base64")
+                },
+                body: Bun.file(file)
+            }
+        );
+        if (!res.ok) {
+            console.error(`Failed to upload file ${file}: ${res.status} ${res.statusText}`);
+        } else {
+            console.log(`Uploaded file ${file} successfully.`);
+        }
+
     }
 
 }
