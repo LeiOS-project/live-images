@@ -39,8 +39,8 @@ export class PublishCMD extends CLICMD {
         }
 
 
-        const existingFiles = await this.getExistingFiles();
-
+        const existingFiles = await this.getExistingFiles(Object.keys(versions));
+        
         const results: Record<string, string[]> = {};
 
         for (const [version, versionFiles] of Object.entries(versions)) {
@@ -63,7 +63,7 @@ export class PublishCMD extends CLICMD {
 
             const toUpload = [];
             for (const file of versionFiles) {
-                if (!existingFiles.includes(file)) {
+                if (!existingFiles[version]?.includes(file)) {
                     toUpload.push(file);
                 } else {
                     console.log(`File ${file} for version ${version} already exists, skipping upload.`);
