@@ -153,7 +153,7 @@ export class PublishCMD extends CLICMD {
             result[pkg.version] = data.map(file => file.file_name);
         }
 
-        return result
+        return result;
     }
 
 }
