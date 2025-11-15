@@ -100,7 +100,7 @@ export class PublishCMD extends CLICMD {
             "--user",
             `${GIT_DEPLOY_KEY_ID}:${GIT_DEPLOY_KEY_SECRET}`,
             "--upload-file", file,
-            `https://git.leicraftmc.de/api/v4/projects/5/packages/generic/releases/${version}/${file}`,
+            `https://git.leicraftmc.de/api/v4/projects/5/packages/generic/release-${version}/${version}/${file}`,
         ]).exited;
 
         if (result !== 0) {
@@ -131,7 +131,7 @@ export class PublishCMD extends CLICMD {
         const result: Record<string, string[]> = {};
 
         for (const pkg of verionsData) {
-            if (!requestedVersions.includes(pkg.version) || pkg.package_type !== "generic" || pkg.name !== "releases") {
+            if (!requestedVersions.includes(pkg.version) || pkg.package_type !== "generic" || pkg.name.startsWith("release-") === false) {
                 continue;
             }
             const response = await fetch(`https://git.leicraftmc.de/api/v4/projects/5/packages/${pkg.id}/package_files`);
