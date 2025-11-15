@@ -76,24 +76,20 @@ export class PublishCMD extends CLICMD {
         const GIT_DEPLOY_KEY_ID = Utils.requireEnvVariable("GIT_DEPLOY_KEY_ID");
         const GIT_DEPLOY_KEY_SECRET = Utils.requireEnvVariable("GIT_DEPLOY_KEY_SECRET");
 
-        const res = await fetch(
+        const result = await Bun.spawn([
+            "curl",
+            "--location",
+            "--user",
+            `${GIT_DEPLOY_KEY_ID}:${GIT_DEPLOY_KEY_SECRET}`,
+            "--upload-file", file,
             `https://git.leicraftmc.de/api/v4/projects/5/packages/generic/releases/${version}/${file}`,
-            {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/octet-stream",
-                    "Authorization": "Basic " +
-                        Buffer.from(`${GIT_DEPLOY_KEY_ID}:${GIT_DEPLOY_KEY_SECRET}`).toString("base64")
-                },
-                body: Bun.file(file)
-            }
-        );
-        if (!res.ok) {
-            console.error(`Failed to upload file ${file}: ${res.status} ${res.statusText}`);
-        } else {
-            console.log(`Uploaded file ${file} successfully.`);
-        }
+        ]).exited;
 
+        if (result !== 0) {
+            console.error(`Failed to upload file ${file} for version ${version}.`);
+        } else {
+            console.log(`Uploaded file ${file} for version ${version}.`);
+        }
     }
 
 }
