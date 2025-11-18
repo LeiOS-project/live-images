@@ -1,12 +1,15 @@
 [Desktop Entry]
+Type=Application
 Version=1.0
 Encoding=UTF-8
 Name=Install LeiOS
 GenericName=LeiOS Installer
-Comment=LeiOS Installer
 Exec=/usr/bin/calamares
+Comment=LeiOS Installer
+Keywords=calamares;system;install;leios;installer
 #Icon=/usr/share/pixmaps/sparky48-installer.png
 Terminal=false
 MultipleArgs=false
-Type=Application
-Categories=Applications;System  
+Categories=Qt;Applications;System
+StartupWMClass=calamares
+StartupNotify=True
