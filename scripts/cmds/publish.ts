@@ -80,13 +80,10 @@ export class PublishCMD extends CLICMD {
 
     private async uploadFiles(version: string, files: string[]) {
 
-        const promises: Promise<void>[] = [];
-
         for (const file of files) {
-            promises.push(this.uploadFile(version, file));
+            await this.uploadFile(version, file);
         }
 
-        await Promise.all(promises);
     }
 
     private async uploadFile(version: string, file: string) {
