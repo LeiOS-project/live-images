@@ -21,8 +21,6 @@ lb config noauto \
 	--binary-images iso-hybrid \
 	--checksums sha256 \
 	--debconf-frontend noninteractive \
-	--debian-installer live \
-	--debian-installer-distribution trixie \
 	--debootstrap-options "--include=apt-transport-https,ca-certificates,openssl" \
 	--firmware-binary true \
 	--firmware-chroot true \
