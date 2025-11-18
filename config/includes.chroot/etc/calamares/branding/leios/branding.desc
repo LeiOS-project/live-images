@@ -1,0 +1,39 @@
+---
+componentName:   leios
+welcomeStyleCalamares: true
+welcomeExpandingLogo: true
+windowExpanding: normal
+windowSize: 800px,580px
+windowPlacement: center
+
+strings:
+    productName:         LeiOS
+    shortProductName:    LeiOS
+    version:             0.5.1
+    shortVersion:        0.5.1
+    versionedName:       LeiOS 0.5.1
+    shortVersionedName:  LeiOS 0.5.1
+    bootloaderEntryName: LeiOS
+    productUrl:          https://www.leios.dev
+    supportUrl:          https://www.leios.dev
+    knownIssuesUrl:      https://www.leios.dev
+    releaseNotesUrl:     https://www.leios.dev
+    donateUrl:           https://www.leios.dev
+
+sidebar: widget
+navigation: widget
+
+images:
+    productLogo:         "leios-logo.png"
+    productIcon:         "leios-logo.png"
+    productWelcome:      "welcome.png"
+
+slideshow:               "show.qml"
+
+style:
+   SidebarBackground:    "#26475b"
+   SidebarText:          "#FFFFFF"
+   SidebarTextCurrent:   "#fbfbfb"
+   SidebarBackgroundCurrent: "#265370"
+
+slideshowAPI: 2
