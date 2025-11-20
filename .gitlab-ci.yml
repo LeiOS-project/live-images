@@ -28,9 +28,16 @@ build-live-iso:
     - bun install
 
   script:
+    - echo "--- Starting build ---"
+
     # Build the ISO
-    - lb build
+    - sudo lb config
+    - sudo lb build
 
     # Publish
     - ./li publish
+
+    - sudo lb clean --purge
+
+    - echo "--- Build complete ---"
 
