@@ -18,7 +18,13 @@ build-live-iso:
     - leios-image-builder-amd64
 
   before_script:
-    - curl -fsSL https://bun.sh/install | bash
+    - |
+      if ! command -v bun &> /dev/null
+      then
+        # install bun
+        curl -fsSL https://bun.sh/install | bash
+        export PATH="$HOME/.bun/bin:$PATH"
+      fi
     - bun install
 
   script:
@@ -26,5 +32,5 @@ build-live-iso:
     - lb build
 
     # Publish
-    - li publish
+    - ./li publish
 
