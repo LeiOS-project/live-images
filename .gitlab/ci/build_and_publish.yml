@@ -12,6 +12,7 @@ workflow:
 
 build-and-publish-live-iso:
   stage: build_and_publish
+  when: manual
   allow_failure: false
   tags:
     - leios-image-builder-amd64
