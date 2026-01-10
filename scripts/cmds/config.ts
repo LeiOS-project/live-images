@@ -17,7 +17,7 @@ export class ConfigCMD extends CLICMD {
         const parsedFlags = this.flagParser.parse(args);
         if (typeof parsedFlags === "string") {
             console.error("Error parsing flags:", parsedFlags);
-            return;
+            process.exit(1);
         }
 
         const version = parsedFlags["--version"];
@@ -25,14 +25,14 @@ export class ConfigCMD extends CLICMD {
         if (typeof version !== "string" || !version_regex.test(version)) {
             console.error("Invalid version specified.");
             console.error("Usage:", "--base-dir=<dir> --architecture=<amd64|arm64> --version=<version>");
-            return;
+            process.exit(1);
         }
 
         const architecture = parsedFlags["--architecture"];
         if (architecture !== "amd64" && architecture !== "arm64") {
             console.error("Invalid architecture specified. Must be 'amd64' or 'arm64'.");
             console.error("Usage:", "--base-dir=<dir> --architecture=<amd64|arm64> --version=<version>");
-            return;
+            process.exit(1);
         }
 
         await Utils.createTMPBuildDir();

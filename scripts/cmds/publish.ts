@@ -16,13 +16,13 @@ export class PublishCMD extends CLICMD {
         const parsedFlags = this.flagParser.parse(args);
         if (typeof parsedFlags === "string") {
             console.error("Error parsing flags:", parsedFlags);
-            return;
+            process.exit(1);
         }
         const architecture = parsedFlags["--architecture"];
         if (architecture !== "amd64" && architecture !== "arm64") {
             console.error("Invalid architecture specified. Must be 'amd64' or 'arm64'.");
             console.error("Usage:", "--base-dir=<dir> --architecture=<amd64|arm64>");
-            return;
+            process.exit(1);
         }
 
         const service = new PublishingService(architecture);

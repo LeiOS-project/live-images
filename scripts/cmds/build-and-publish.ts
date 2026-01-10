@@ -18,7 +18,7 @@ export class BuildAndPublishCMD extends CLICMD {
         const parsedFlags = this.flagParser.parse(args);
         if (typeof parsedFlags === "string") {
             console.error("Error parsing flags:", parsedFlags);
-            return;
+            process.exit(1);
         }
 
         const version = parsedFlags["--version"];
@@ -26,14 +26,14 @@ export class BuildAndPublishCMD extends CLICMD {
         if (typeof version !== "string" || !version_regex.test(version)) {
             console.error("Invalid version specified.");
             console.error("Usage:", "--base-dir=<dir> --architecture=<amd64|arm64> --version=<version>");
-            return;
+            process.exit(1);
         }
 
         const architecture = parsedFlags["--architecture"];
         if (architecture !== "amd64" && architecture !== "arm64") {
             console.error("Invalid architecture specified. Must be 'amd64' or 'arm64'.");
             console.error("Usage:", "--base-dir=<dir> --architecture=<amd64|arm64> --version=<version>");
-            return;
+            process.exit(1);
         }
 
         await Utils.createTMPBuildDir();
@@ -51,7 +51,7 @@ export class BuildAndPublishCMD extends CLICMD {
         } catch (err) {
             console.error("Error during build:", err);
             await Utils.removeTMPBuildDir();
-            return;
+            process.exit(1);
         }
 
         const service = new PublishingService(architecture);
@@ -60,13 +60,14 @@ export class BuildAndPublishCMD extends CLICMD {
         } catch (err) {
             console.error("Error during publishing:", err);
             await Utils.removeTMPBuildDir();
-            return;
+            process.exit(1);
         }
 
         try {
             await Utils.removeTMPBuildDir();
         } catch (err) {
             console.error("Error during cleanup:", err);
+            process.exit(1);
         }
     }
 }
