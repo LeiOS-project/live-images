@@ -14,7 +14,7 @@ export namespace Utils {
 
         let finalCommandParts = commandParts;
         if (commandParts[0] === "sudo" && options?.env) {
-            finalCommandParts = ["sudo", Object.entries(options.env).map(([key, value]) => `${key}=${value}`).join(" "), ...commandParts.slice(1)];
+            finalCommandParts = ["sudo", ...Object.entries(options.env).map(([key, value]) => `${key}=${value}`), ...commandParts.slice(1)];
         }
 
         const proc = Bun.spawn({
