@@ -9,7 +9,7 @@ export class PublishCMD extends CLICMD {
 
     private flagParser = new CMDFlagsParser({
         "--architecture": new CMDFlag("string", "The target architecture to publish (amd64 or arm64).", true, null),
-        "--baseDir": new CMDFlag("string", "The base directory where the built files are located.", true, null),
+        "--base-dir": new CMDFlag("string", "The base directory where the built files are located.", true, null),
     })
 
     override async run(args: string[]) {
@@ -22,13 +22,13 @@ export class PublishCMD extends CLICMD {
         const architecture = parsedFlags["--architecture"];
         if (architecture !== "amd64" && architecture !== "arm64") {
             console.error("Invalid architecture specified. Must be 'amd64' or 'arm64'.");
-            console.error("Usage:", "--baseDir=<dir> --architecture=<amd64|arm64>");
+            console.error("Usage:", "--base-dir=<dir> --architecture=<amd64|arm64>");
             return;
         }
-        const baseDir = parsedFlags["--baseDir"];
+        const baseDir = parsedFlags["--base-dir"];
         if (typeof baseDir !== "string" || baseDir.length === 0) {
-            console.error("Invalid baseDir specified.");
-            console.error("Usage:", "--baseDir=<dir> --architecture=<amd64|arm64>");
+            console.error("Invalid base-dir specified.");
+            console.error("Usage:", "--base-dir=<dir> --architecture=<amd64|arm64>");
             return;
         }
 
