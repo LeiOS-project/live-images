@@ -10,7 +10,7 @@ export namespace Utils {
         return value;
     }
 
-    export function execNativeCommand(commandParts: string[], options?: { cwd?: string, env?: Record<string, string | undefined> }): Promise<number> {
+    export async function execNativeCommand(commandParts: string[], options?: { cwd?: string, env?: Record<string, string | undefined> }): Promise<number> {
 
         const proc = Bun.spawn({
             cmd: commandParts,
@@ -33,7 +33,12 @@ export namespace Utils {
         //     }
         // })();
 
-        return proc.exited;
+        const exitCode = await proc.exited;
+        if (exitCode !== 0) {
+            throw new Error(`Command ${commandParts.join(" ")} exited with code ${exitCode}`);
+        }
+
+        return exitCode;
     }
 
     export function execShellCommand(command: string, options?: { cwd?: string, env?: Record<string, string | undefined> }): Promise<number> {
