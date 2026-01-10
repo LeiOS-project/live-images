@@ -22,7 +22,8 @@ export class BuildAndPublishCMD extends CLICMD {
         }
 
         const version = parsedFlags["--version"];
-        if (typeof version !== "string" || version.length === 0) {
+        const version_regex = /^[0-9]+\.[0-9]+\.[0-9]+-\d{12}$/;
+        if (typeof version !== "string" || !version_regex.test(version)) {
             console.error("Invalid version specified.");
             console.error("Usage:", "--base-dir=<dir> --architecture=<amd64|arm64> --version=<version>");
             return;

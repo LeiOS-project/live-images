@@ -99,6 +99,6 @@ lb config noauto \
 	--iso-publisher LeiCraft_MC \
 	--iso-application "LeiOS Live $INSERT_TARGET_LIVE_VERSION $INSERT_TARGET_ARCH" \
 	--iso-volume "LeiOS Live $INSERT_TARGET_LIVE_VERSION $INSERT_TARGET_ARCH" \
-	--image-name leios-$INSERT_TARGET_LIVE_VERSION \
+	--image-name leios-live-$INSERT_TARGET_LIVE_VERSION \
 
 "${@}"

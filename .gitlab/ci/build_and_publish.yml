@@ -2,17 +2,26 @@
 stages:
   - build_and_publish
 
+variables:
+  LIVE_INSTALLER_VERSION:
+    value: "0.0.0"
+    description: "Version of the LeiOS Live Installer"
+  CURRENT_DATE_TAG:
+    value: "${CI_PIPELINE_CREATED_AT:%Y%m%d%H%M}"
+    description: "Current date in YYYYMMDDHHMM format"
+
 
 workflow:
   rules:
-    - if: $CI_PIPELINE_SOURCE == "web"
+    - if: $CI_PIPELINE_SOURCE == "web" || $CI_PIPELINE_SOURCE == "api"
     - if: $GIT_DEPLOY_KEY_ID
     - if: $GIT_DEPLOY_KEY_SECRET
+    - if: $LIVE_INSTALLER_VERSION != "0.0.0"
+      when: always
     - when: never
 
 build-and-publish-live-iso:
   stage: build_and_publish
-  when: manual
   allow_failure: false
   tags:
     - leios-image-builder-amd64
@@ -30,21 +39,18 @@ build-and-publish-live-iso:
     - bun install
 
   script:
+  
     - echo "--- Starting build for amd64 ---"
 
-    # Pre clean
-    - sudo ./lli clean
-
-    # Build the ISO
-    - sudo ./lli config
-    - sudo ./lli build
-
-    # Publish
-    - ./lli publish
-
-    - sudo ./lli clean
+    - sudo ./lli build-and-publish --architecture=amd64 --version=${LIVE_INSTALLER_VERSION}-${CURRENT_DATE_TAG}
 
     - echo "--- Build for amd64 complete ---"
+
+    - echo "--- Starting build for arm64 ---"
+
+    - sudo ./lli build-and-publish --architecture=arm64 --version=${LIVE_INSTALLER_VERSION}-${CURRENT_DATE_TAG}
+
+    - echo "--- Build for arm64 complete ---"
 
   after_script:
     - echo "Starting cleanup after build and publish job."

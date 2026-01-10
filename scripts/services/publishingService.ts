@@ -21,7 +21,7 @@ export class PublishingService {
 
         const versions: Record<string, string[]> = {};
 
-        const regex = new RegExp(`^leios-(\d{4}\.\d{2}\.\d{1,3})-${this.architecture}\..*$`);
+        const regex = new RegExp(`^leios-live-([0-9]+\.[0-9]+\.[0-9]+-\d{12})-${this.architecture}\..*$`);
         for (const file of files) {
             const match = file.match(regex);
             if (match) {
