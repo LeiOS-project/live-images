@@ -39,4 +39,6 @@ config/hooks/normal
 
 .bin/
 
+tmp/
+
 node_modules/

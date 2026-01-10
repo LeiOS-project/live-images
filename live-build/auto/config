@@ -2,36 +2,75 @@
 
 set -e
 
+TMP_INSERTABLE_VARS_LIST=""
+
+function register_insertable_env_var {
+	local VAR_NAME="$1"
+	if [ -z "${!VAR_NAME}" ]; then
+		echo "Environment variable $VAR_NAME is not set. Exiting."
+		exit 1
+	fi
+	if [ -n "$TMP_INSERTABLE_VARS_LIST" ]; then
+		TMP_INSERTABLE_VARS_LIST="$TMP_INSERTABLE_VARS_LIST $VAR_NAME"
+	else
+		TMP_INSERTABLE_VARS_LIST="$VAR_NAME"
+	fi
+}
+
+function replace_insertable_vars_in_all_config_files {
+	for VAR_NAME in $TMP_INSERTABLE_VARS_LIST; do
+		sed -i "s/{{${VAR_NAME}}}/${!VAR_NAME}/g" $(grep -rl "{{${VAR_NAME}}}" ./config/)
+	done
+}
+
+
+# Set insertable variables
+INSERT_TARGET_DATE=$(date +%Y%m%d)
+
+register_insertable_env_var INSERT_TARGET_DATE
+register_insertable_env_var INSERT_TARGET_ARCH
+register_insertable_env_var INSERT_BASE_CODENAME
+register_insertable_env_var INSERT_TARGET_LIVE_VERSION
+
+# Replace insertable variables in config files
+replace_insertable_vars_in_all_config_files
+
+# Prepare hooks
 mkdir -p config/hooks/normal/
 cp ./config/hooks/*.hook.chroot config/hooks/normal/
 chmod +x config/hooks/normal/*.hook.chroot
 
 lb config noauto \
 	--clean \
-	--distribution trixie \
-	--architectures amd64 \
+	\
+	--architectures "$INSERT_TARGET_ARCH" \
+	\
+	--distribution "$INSERT_BASE_CODENAME" \
+	--mirror-binary "https://deb.debian.org/debian" \
+	--mirror-bootstrap "https://deb.debian.org/debian" \
+	--archive-areas "main contrib non-free non-free-firmware" \
 	--backports true \
 	--security true \
 	--updates true \
 	--source false \
-	--mirror-binary "https://deb.debian.org/debian" \
-	--mirror-bootstrap "https://deb.debian.org/debian" \
-	--archive-areas "main contrib non-free non-free-firmware" \
+	--firmware-binary true \
+	--firmware-chroot true \
+	--linux-packages "linux-image linux-headers" \
+	\
 	--binary-filesystem ext4 \
 	--binary-images iso-hybrid \
 	--checksums sha256 \
 	--debconf-frontend noninteractive \
 	--debootstrap-options "--include=apt-transport-https,ca-certificates,openssl" \
-	--firmware-binary true \
-	--firmware-chroot true \
-	--initramfs live-boot \
-	--linux-packages "linux-image linux-headers" \
-	--memtest memtest86+ \
-	--iso-publisher LeiCraft_MC \
-	--iso-application "LeiOS" \
-	--iso-volume LeiOS 0.6.3 AMD64 \
-	--image-name leios-0.6.3 \
+	\
 	--bootloaders "grub-pc grub-efi" \
 	--bootappend-live "boot=live components quiet username=user hostname=leios" \
+	--initramfs live-boot \
+	--memtest memtest86+ \
+	\
+	--iso-publisher LeiCraft_MC \
+	--iso-application "LeiOS Live $INSERT_TARGET_LIVE_VERSION $INSERT_TARGET_ARCH" \
+	--iso-volume "LeiOS Live $INSERT_TARGET_LIVE_VERSION $INSERT_TARGET_ARCH" \
+	--image-name leios-$INSERT_TARGET_LIVE_VERSION \
 
 "${@}"
