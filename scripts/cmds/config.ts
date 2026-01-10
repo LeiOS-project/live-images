@@ -34,6 +34,8 @@ export class ConfigCMD extends CLICMD {
             return;
         }
 
+        await Utils.createTMPBuildDir();
+
         await Utils.execNativeCommand(["lb", "config"], {
             cwd: "./tmp/build",
             env: {
