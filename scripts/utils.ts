@@ -45,7 +45,9 @@ export namespace Utils {
         await Utils.removeTMPBuildDir();
 
         // create a temp dir
-        await fs.mkdir("./tmp/build", { recursive: true, mode: 0o755 });
+        await fs.mkdir("./tmp", { recursive: true, mode: 0o755 });
+
+        await fs.cp("./live-build", "./tmp/build", { recursive: true });
     }
 
     export async function removeTMPBuildDir() {
