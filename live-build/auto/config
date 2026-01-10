@@ -29,8 +29,8 @@ INSERT_TARGET_DATE=$(date +%Y%m%d)
 
 register_insertable_env_var INSERT_TARGET_DATE
 register_insertable_env_var INSERT_TARGET_ARCH
-register_insertable_env_var INSERT_BASE_CODENAME
 register_insertable_env_var INSERT_TARGET_LIVE_VERSION
+register_insertable_env_var INSERT_BASE_CODENAME
 
 # Replace insertable variables in config files
 replace_insertable_vars_in_all_config_files

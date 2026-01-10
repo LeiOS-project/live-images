@@ -33,16 +33,16 @@ build-and-publish-live-iso-amd64:
     - echo "--- Starting build ---"
 
     # Pre clean
-    - sudo ./li clean
+    - sudo ./lli clean
 
     # Build the ISO
-    - sudo ./li config
-    - sudo ./li build
+    - sudo ./lli config
+    - sudo ./lli build
 
     # Publish
-    - ./li publish
+    - ./lli publish
 
-    - sudo ./li clean
+    - sudo ./lli clean
 
     - echo "--- Build complete ---"
 

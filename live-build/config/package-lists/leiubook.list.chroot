@@ -60,7 +60,7 @@ gnupg
 grep
 groff-base
 grub-common
-grub-efi-amd64
+grub-efi-{{INSERT_TARGET_ARCH}}
 gzip
 hostname
 ifupdown
@@ -163,7 +163,7 @@ less
 # libxtables12
 # libxxhash0
 # libzstd1
-linux-image-amd64
+linux-image-{{INSERT_TARGET_ARCH}}
 linux-sysctl-defaults
 live-build
 lm-sensors

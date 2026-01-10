@@ -37,7 +37,7 @@ build-and-publish-live-iso-amd64:
     - sudo lb build
 
     # Publish
-    - ./li publish
+    - ./lli publish
 
     - sudo lb clean --purge
 

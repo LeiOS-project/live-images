@@ -9,10 +9,10 @@ windowPlacement: center
 strings:
     productName:         LeiOS
     shortProductName:    LeiOS
-    version:             0.6.3
-    shortVersion:        0.6.3
-    versionedName:       LeiOS 0.6.3
-    shortVersionedName:  LeiOS 0.6.3
+    version:             {{INSERT_TARGET_LIVE_VERSION}}
+    shortVersion:        {{INSERT_TARGET_LIVE_VERSION}}
+    versionedName:       LeiOS {{INSERT_TARGET_LIVE_VERSION}}
+    shortVersionedName:  LeiOS {{INSERT_TARGET_LIVE_VERSION}}
     bootloaderEntryName: LeiOS
     productUrl:          https://www.leios.dev
     supportUrl:          https://www.leios.dev

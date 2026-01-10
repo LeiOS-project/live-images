@@ -9,7 +9,7 @@ export namespace Utils {
         return value;
     }
 
-    export function execNativeCommand(commandParts: string[], options?: { cwd?: string }): Promise<number> {
+    export function execNativeCommand(commandParts: string[], options?: { cwd?: string, env?: Record<string, string | undefined> }): Promise<number> {
 
         const proc = Bun.spawn({
             cmd: commandParts,
@@ -35,7 +35,7 @@ export namespace Utils {
         return proc.exited;
     }
 
-    export function execShellCommand(command: string, options?: { cwd?: string }): Promise<number> {
+    export function execShellCommand(command: string, options?: { cwd?: string, env?: Record<string, string | undefined> }): Promise<number> {
         return execNativeCommand(["bash", "-c", command], options);
     }
 
