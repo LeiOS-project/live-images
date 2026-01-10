@@ -6,10 +6,6 @@ variables:
   LIVE_INSTALLER_VERSION:
     value: "0.0.0"
     description: "Version of the LeiOS Live Installer"
-  CURRENT_DATE_TAG:
-    value: ${CI_PIPELINE_CREATED_AT:%Y%m%d%H%M}
-    description: "Current date in YYYYMMDDHHMM format"
-
 
 workflow:
   rules:
@@ -39,9 +35,9 @@ build-and-publish-live-iso:
         export PATH="$HOME/.bun/bin:$PATH"
       fi
     - bun install
-
+    - export CURRENT_DATE_TAG=$(date +%Y%m%d%H%M)
   script:
-    - exit 1  # Temporary exit to disable this job while we test the new one below
+
     - echo "--- Starting build for amd64 ---"
 
     - ./lli build-and-publish --architecture=amd64 --version=${LIVE_INSTALLER_VERSION}-${CURRENT_DATE_TAG}
