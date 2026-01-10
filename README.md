@@ -14,7 +14,10 @@ and PXE images for LeiOS. This repository contains the configuration tree that
   - `squashfs-tools`
   - `xorriso`
   - `syslinux-common`
-  - `bun`
+  - `crossbuild-essential-arm64`
+  - `qemu-user-static`
+  - `binfmt-support`
+  - `bun`,
 
 Install the core tooling on Debian based systems with:
 
@@ -33,10 +36,10 @@ sudo systemctl restart systemd-binfmt
 
 ```bash
 # Configure the build (only required the first time or after config changes)
-sudo lb config
+sudo ./lli config
 
 # Build the ISO image (run from the repository root)
-sudo lb build
+sudo ./lli build
 ```
 
 The resulting images appear under `live-image-*` directories at the repository
