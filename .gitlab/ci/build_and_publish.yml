@@ -17,6 +17,8 @@ workflow:
       when: never
     - if: $LIVE_INSTALLER_VERSION == "0.0.0"
       when: never
+    
+    - when: always
 
 build-and-publish-live-iso:
   stage: build_and_publish
