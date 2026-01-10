@@ -32,14 +32,17 @@ build-and-publish-live-iso-amd64:
   script:
     - echo "--- Starting build ---"
 
+    # Pre clean
+    - sudo ./li clean
+
     # Build the ISO
-    - sudo lb config
-    - sudo lb build
+    - sudo ./li config
+    - sudo ./li build
 
     # Publish
     - ./li publish
 
-    - sudo lb clean --purge
+    - sudo ./li clean
 
     - echo "--- Build complete ---"
 
