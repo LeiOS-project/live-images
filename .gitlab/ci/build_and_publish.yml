@@ -1,6 +1,6 @@
 
 stages:
-  - build_and_publish
+  - build_and_publish_amd64
 
 
 workflow:
@@ -11,13 +11,15 @@ workflow:
     - when: never
 
 build-and-publish-live-iso:
-  stage: build_and_publish
+  stage: build_and_publish_amd64
   when: manual
   allow_failure: false
   tags:
     - leios-image-builder-amd64
 
   before_script:
+    #- sudo apt-get update
+    #- sudo apt-get install -y live-build debootstrap squashfs-tools xorriso syslinux-common
     - |
       if ! command -v bun &> /dev/null
       then

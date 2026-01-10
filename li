@@ -20,4 +20,10 @@ then
     esac
 fi
 
+# check if node_modules exist
+if [ ! -d "node_modules" ]; then
+    echo "Installing dependencies..."
+    bun install --production
+fi
+
 bun ./scripts/index.ts "$@"
