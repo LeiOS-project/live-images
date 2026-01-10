@@ -18,9 +18,43 @@ function register_insertable_env_var {
 }
 
 function replace_insertable_vars_in_all_config_files {
-	for VAR_NAME in $TMP_INSERTABLE_VARS_LIST; do
-		sed -i "s/{{${VAR_NAME}}}/${!VAR_NAME}/g" $(grep -rl "{{${VAR_NAME}}}" ./config/)
-	done
+    local config_dir="./config"
+    
+    # Check if config directory exists
+    if [[ ! -d "$config_dir" ]]; then
+        echo "Error: Config directory '$config_dir' does not exist." >&2
+        return 1
+    fi
+    
+    # Check if there are any variables to replace
+    if [[ -z "$TMP_INSERTABLE_VARS_LIST" ]]; then
+        echo "Warning: No variables to replace." >&2
+        return 0
+    fi
+    
+    # Loop through each variable
+    for VAR_NAME in $TMP_INSERTABLE_VARS_LIST; do
+        # Check if variable is set
+        if [[ -z "${!VAR_NAME}" ]]; then
+            echo "Warning: Variable '$VAR_NAME' is not set or is empty." >&2
+            continue
+        fi
+        
+        # Find files containing the placeholder
+        local files
+        files=$(grep -rl "{{${VAR_NAME}}}" "$config_dir" 2>/dev/null)
+        
+        if [[ -n "$files" ]]; then
+            # Escape slashes in the value for sed
+            local value
+            value="${!VAR_NAME}"
+            value="${value//\//\\/}"  # Escape forward slashes
+            value="${value//&/\\&}"   # Escape ampersands
+            
+            # Replace in all found files
+            echo "$files" | xargs sed -i "s/{{${VAR_NAME}}}/${value}/g"
+        fi
+    done
 }
 
 
