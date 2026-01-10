@@ -10,7 +10,7 @@ workflow:
     - if: $GIT_DEPLOY_KEY_SECRET
     - when: never
 
-build-and-publish-live-iso:
+build-and-publish-live-iso-amd64:
   stage: build_and_publish_amd64
   when: manual
   allow_failure: false
