@@ -54,7 +54,15 @@ export class BuildAndPublishCMD extends CLICMD {
         }
 
         try {
-            await Utils.execNativeCommand(["lb", "build"], { cwd: "./tmp/build" });
+            await Utils.execNativeCommand(["lb", "build"], {
+                cwd: "./tmp/build",
+                env: {
+                    "INSERT_TARGET_ARCH": architecture,
+                    "INSERT_TARGET_LIVE_VERSION": version,
+                    //@TODO do a better solution for codename detection in the future
+                    "INSERT_BASE_CODENAME": "trixie",
+                }
+            });
         } catch (err) {
             console.error("Error during build:", err);
             await Utils.removeTMPBuildDir();
