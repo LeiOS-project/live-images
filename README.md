@@ -20,7 +20,13 @@ Install the core tooling on Debian based systems with:
 
 ```bash
 sudo apt-get update
-sudo apt-get install live-build debootstrap squashfs-tools xorriso syslinux-common
+sudo apt-get install live-build debootstrap squashfs-tools xorriso syslinux-common crossbuild-essential-arm64 qemu-user-static binfmt-support
+```
+
+Register QEMU interpreters:
+```bash
+sudo update-binfmts --enable qemu-aarch64
+sudo systemctl restart systemd-binfmt
 ```
 
 ## Quick Start
