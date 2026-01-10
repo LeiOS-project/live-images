@@ -56,7 +56,7 @@ build-and-publish-live-iso:
     - echo "Starting cleanup after build and publish job."
       
     # Clean up any remaining files if necessary
-    - rm -rf .
+    - rm -rf ./*
 
     - echo "Build and publish job finished."
 
