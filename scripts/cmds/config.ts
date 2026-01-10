@@ -46,7 +46,8 @@ export class ConfigCMD extends CLICMD {
             env: {
                 "INSERT_TARGET_ARCH": architecture,
                 "INSERT_TARGET_LIVE_VERSION": baseDir,
-                "INSERT_BASE_CODENAME": baseDir,
+                //@TODO do a better solution for codename detection in the future
+                "INSERT_BASE_CODENAME": "trixie",
             }
         });
     }
