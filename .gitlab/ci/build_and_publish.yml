@@ -14,9 +14,9 @@ variables:
 workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "web" || $CI_PIPELINE_SOURCE == "api"
-    - if: $GIT_DEPLOY_KEY_ID
-    - if: $GIT_DEPLOY_KEY_SECRET
-    - if: $LIVE_INSTALLER_VERSION != "0.0.0"
+    # - if: $GIT_DEPLOY_KEY_ID
+    # - if: $GIT_DEPLOY_KEY_SECRET
+    # - if: $LIVE_INSTALLER_VERSION != "0.0.0"
       when: always
     - when: never
 
