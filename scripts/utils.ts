@@ -12,8 +12,13 @@ export namespace Utils {
 
     export async function execNativeCommand(commandParts: string[], options?: { cwd?: string, env?: Record<string, string | undefined> }): Promise<number> {
 
+        let finalCommandParts = commandParts;
+        if (commandParts[0] === "sudo" && options?.env) {
+            finalCommandParts = ["sudo", "-E", Object.entries(options.env).map(([key, value]) => `${key}=${value}`).join(" "), ...commandParts.slice(1)];
+        }
+
         const proc = Bun.spawn({
-            cmd: commandParts,
+            cmd: finalCommandParts,
             stdout: "inherit",
             stderr: "inherit",
             ...options,
@@ -57,7 +62,7 @@ export namespace Utils {
 
     export async function removeTMPBuildDir() {
         if (await fs.access("./tmp/build").then(() => true).catch(() => false)) {
-            await Utils.execNativeCommand(["sudo", "--preserve-env", "lb", "clean", "--purge"], { cwd: "./tmp/build" });
+            await Utils.execNativeCommand(["sudo", "lb", "clean", "--purge"], { cwd: "./tmp/build" });
         }
         await fs.rm("./tmp", { recursive: true, force: true });
     }
