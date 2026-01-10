@@ -49,10 +49,9 @@ export namespace Utils {
     }
 
     export async function removeTMPBuildDir() {
-        if (!(await fs.stat("./tmp").catch(() => false))) {
-            return;
+        if (await fs.access("./tmp/build").then(() => true).catch(() => false)) {
+            await Utils.execNativeCommand(["lb", "clean", "--purge"], { cwd: "./tmp/build" });
         }
-        await Utils.execNativeCommand(["lb", "clean", "--purge"], { cwd: "./tmp/build" });
         await fs.rm("./tmp", { recursive: true, force: true });
     }
 
