@@ -9,8 +9,7 @@ export class ConfigCMD extends CLICMD {
 
     private flagParser = new CMDFlagsParser({
         "--version": new CMDFlag("string", "The version of the LeiOS live image to build.", true, null),
-        "--architecture": new CMDFlag("string", "The target architecture to publish (amd64 or arm64).", true, null),
-        "--base-dir": new CMDFlag("string", "The base directory where the built & config files are located.", true, null),
+        "--architecture": new CMDFlag("string", "The target architecture to publish (amd64 or arm64).", true, null)
     })
 
     override async run(args: string[]) {
@@ -34,18 +33,12 @@ export class ConfigCMD extends CLICMD {
             console.error("Usage:", "--base-dir=<dir> --architecture=<amd64|arm64> --version=<version>");
             return;
         }
-        const baseDir = parsedFlags["--base-dir"];
-        if (typeof baseDir !== "string" || baseDir.length === 0) {
-            console.error("Invalid base-dir specified.");
-            console.error("Usage:", "--base-dir=<dir> --architecture=<amd64|arm64> --version=<version>");
-            return;
-        }
 
         await Utils.execNativeCommand(["lb", "config"], {
-            cwd: baseDir,
+            cwd: "./tmp/build",
             env: {
                 "INSERT_TARGET_ARCH": architecture,
-                "INSERT_TARGET_LIVE_VERSION": baseDir,
+                "INSERT_TARGET_LIVE_VERSION": version,
                 //@TODO do a better solution for codename detection in the future
                 "INSERT_BASE_CODENAME": "trixie",
             }

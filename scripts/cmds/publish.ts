@@ -8,8 +8,7 @@ export class PublishCMD extends CLICMD {
     override usage = "publish";
 
     private flagParser = new CMDFlagsParser({
-        "--architecture": new CMDFlag("string", "The target architecture to publish (amd64 or arm64).", true, null),
-        "--base-dir": new CMDFlag("string", "The base directory where the built files are located.", true, null),
+        "--architecture": new CMDFlag("string", "The target architecture to publish (amd64 or arm64).", true, null)
     })
 
     override async run(args: string[]) {
@@ -25,14 +24,8 @@ export class PublishCMD extends CLICMD {
             console.error("Usage:", "--base-dir=<dir> --architecture=<amd64|arm64>");
             return;
         }
-        const baseDir = parsedFlags["--base-dir"];
-        if (typeof baseDir !== "string" || baseDir.length === 0) {
-            console.error("Invalid base-dir specified.");
-            console.error("Usage:", "--base-dir=<dir> --architecture=<amd64|arm64>");
-            return;
-        }
 
-        const service = new PublishingService(baseDir, architecture);
+        const service = new PublishingService(architecture);
         await service.run();
     }
 

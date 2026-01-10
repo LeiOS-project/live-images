@@ -1,6 +1,5 @@
 import { CLICMD, CMDFlag, CMDFlagsParser } from "@cleverjs/cli";
 import { Utils } from "../utils";
-import fs from "fs/promises";
 import { PublishingService } from "../services/publishingService";
 
 export class BuildAndPublishCMD extends CLICMD {
@@ -35,56 +34,46 @@ export class BuildAndPublishCMD extends CLICMD {
             console.error("Usage:", "--base-dir=<dir> --architecture=<amd64|arm64> --version=<version>");
             return;
         }
-        const baseDir = "./tmp/build";
 
-        await this.createTMPBuildDir();
+        await Utils.createTMPBuildDir();
 
         try {
             await Utils.execNativeCommand(["lb", "config"], {
-                cwd: baseDir,
+                cwd: "./tmp/build",
                 env: {
                     "INSERT_TARGET_ARCH": architecture,
-                    "INSERT_TARGET_LIVE_VERSION": baseDir,
+                    "INSERT_TARGET_LIVE_VERSION": version,
                     //@TODO do a better solution for codename detection in the future
                     "INSERT_BASE_CODENAME": "trixie",
                 }
             });
         } catch (err) {
             console.error("Error during configuration:", err);
-            await this.removeTMPBuildDir();
+            await Utils.removeTMPBuildDir();
             return;
         }
 
         try {
-            await Utils.execNativeCommand(["lb", "build"], { cwd: baseDir });
+            await Utils.execNativeCommand(["lb", "build"], { cwd: "./tmp/build" });
         } catch (err) {
             console.error("Error during build:", err);
-            await this.removeTMPBuildDir();
+            await Utils.removeTMPBuildDir();
             return;
         }
 
-        const service = new PublishingService(baseDir, architecture);
+        const service = new PublishingService(architecture);
         try {
             await service.run();
         } catch (err) {
             console.error("Error during publishing:", err);
-            await this.removeTMPBuildDir();
+            await Utils.removeTMPBuildDir();
             return;
         }
 
-        await this.removeTMPBuildDir();
-    }
-
-
-    private async createTMPBuildDir() {
-        
-        await this.removeTMPBuildDir();
-
-        // create a temp dir
-        await fs.mkdir("./tmp/build", { recursive: true, mode: 0o755 });
-    }
-
-    private async removeTMPBuildDir() {
-        await fs.rm("./tmp/build", { recursive: true, force: true });
+        try {
+            await Utils.removeTMPBuildDir();
+        } catch (err) {
+            console.error("Error during cleanup:", err);
+        }
     }
 }

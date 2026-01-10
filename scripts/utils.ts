@@ -1,3 +1,4 @@
+import fs from "fs/promises";
 
 export namespace Utils {
 
@@ -37,6 +38,19 @@ export namespace Utils {
 
     export function execShellCommand(command: string, options?: { cwd?: string, env?: Record<string, string | undefined> }): Promise<number> {
         return execNativeCommand(["bash", "-c", command], options);
+    }
+
+    export async function createTMPBuildDir() {
+        
+        await Utils.removeTMPBuildDir();
+
+        // create a temp dir
+        await fs.mkdir("./tmp/build", { recursive: true, mode: 0o755 });
+    }
+
+    export async function removeTMPBuildDir() {
+        await Utils.execNativeCommand(["lb", "clean", "--purge"], { cwd: "./tmp/build" });
+        await fs.rm("./tmp/build", { recursive: true, force: true });
     }
 
 }

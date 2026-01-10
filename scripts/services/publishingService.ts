@@ -4,13 +4,12 @@ import { Utils } from "../utils";
 export class PublishingService {
 
     constructor(
-        protected readonly baseDir: string,
         protected readonly architecture: "amd64" | "arm64"
     ) {}
 
     async run() {
 
-        const files = await this.checkFiles(await fs_readdir("./" + this.baseDir));
+        const files = await this.checkFiles(await fs_readdir("./tmp/build"));
 
         for (const [version, versionFiles] of Object.entries(files)) {
             console.log(`Uploading files for version ${version}...`);
@@ -96,7 +95,7 @@ export class PublishingService {
             "--location",
             "--user",
             `${GIT_DEPLOY_KEY_ID}:${GIT_DEPLOY_KEY_SECRET}`,
-            "--upload-file", `./${this.baseDir}/${file}`,
+            "--upload-file", `./tmp/build/${file}`,
             `https://git.leicraftmc.de/api/v4/projects/5/packages/generic/release-${version}/${version}/${file}`,
         ]).exited;
 
