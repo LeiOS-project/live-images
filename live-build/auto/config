@@ -1,61 +1,37 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
 TMP_INSERTABLE_VARS_LIST=""
 
-function register_insertable_env_var {
-	local VAR_NAME="$1"
-	if [ -z "${!VAR_NAME}" ]; then
-		echo "Environment variable $VAR_NAME is not set. Exiting."
-		exit 1
-	fi
-	if [ -n "$TMP_INSERTABLE_VARS_LIST" ]; then
-		TMP_INSERTABLE_VARS_LIST="$TMP_INSERTABLE_VARS_LIST $VAR_NAME"
-	else
-		TMP_INSERTABLE_VARS_LIST="$VAR_NAME"
-	fi
+register_insertable_env_var() {
+    eval "value=\${$1}"
+    if [ -z "$value" ]; then
+        echo "Environment variable $1 is not set. Exiting."
+        exit 1
+    fi
+    TMP_INSERTABLE_VARS_LIST="${TMP_INSERTABLE_VARS_LIST:+$TMP_INSERTABLE_VARS_LIST }$1"
 }
 
-function replace_insertable_vars_in_all_config_files {
-    local config_dir="./config"
+replace_insertable_vars_in_all_config_files() {
+    [ ! -d "./config" ] && return 0
     
-    # Check if config directory exists
-    if [[ ! -d "$config_dir" ]]; then
-        echo "Error: Config directory '$config_dir' does not exist." >&2
-        return 1
-    fi
-    
-    # Check if there are any variables to replace
-    if [[ -z "$TMP_INSERTABLE_VARS_LIST" ]]; then
-        echo "Warning: No variables to replace." >&2
-        return 0
-    fi
-    
-    # Loop through each variable
-    for VAR_NAME in $TMP_INSERTABLE_VARS_LIST; do
-        # Check if variable is set
-        if [[ -z "${!VAR_NAME}" ]]; then
-            echo "Warning: Variable '$VAR_NAME' is not set or is empty." >&2
-            continue
-        fi
+    for var in $TMP_INSERTABLE_VARS_LIST; do
+        eval "value=\${$var}"
+        [ -z "$value" ] && continue
         
-        # Find files containing the placeholder
-        local files
-        files=$(grep -rl "{{${VAR_NAME}}}" "$config_dir" 2>/dev/null)
-        
-        if [[ -n "$files" ]]; then
-            # Escape slashes in the value for sed
-            local value
-            value="${!VAR_NAME}"
-            value="${value//\//\\/}"  # Escape forward slashes
-            value="${value//&/\\&}"   # Escape ampersands
-            
-            # Replace in all found files
-            echo "$files" | xargs sed -i "s/{{${VAR_NAME}}}/${value}/g"
-        fi
+        # Use awk for safe replacement
+        find ./config -type f -exec grep -l "{{${var}}}" {} \; 2>/dev/null |
+        while read -r file; do
+            awk -v placeholder="{{${var}}}" -v replacement="$value" '
+                {gsub(placeholder, replacement); print}
+            ' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
+        done
     done
 }
+
+# Set insertable variables
+INSERT_TARGET_DATE=$(date +%Y%m%d)
 
 
 # Set insertable variables
