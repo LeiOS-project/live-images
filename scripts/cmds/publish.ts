@@ -22,13 +22,13 @@ export class PublishCMD extends CLICMD {
         const architecture = parsedFlags["architecture"];
         if (architecture !== "amd64" && architecture !== "arm64") {
             console.error("Invalid architecture specified. Must be 'amd64' or 'arm64'.");
-            console.error("Usage:", "--baseDir <dir> --architecture <amd64|arm64>");
+            console.error("Usage:", "--baseDir=<dir> --architecture=<amd64|arm64>");
             return;
         }
         const baseDir = parsedFlags["baseDir"];
         if (typeof baseDir !== "string" || baseDir.length === 0) {
             console.error("Invalid baseDir specified.");
-            console.error("Usage:", "--baseDir <dir> --architecture <amd64|arm64>");
+            console.error("Usage:", "--baseDir=<dir> --architecture=<amd64|arm64>");
             return;
         }
 

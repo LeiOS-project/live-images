@@ -24,20 +24,20 @@ export class ConfigCMD extends CLICMD {
         const version = parsedFlags["version"];
         if (typeof version !== "string" || version.length === 0) {
             console.error("Invalid version specified.");
-            console.error("Usage:", "--baseDir <dir> --architecture <amd64|arm64> --version <version>");
+            console.error("Usage:", "--baseDir=<dir> --architecture=<amd64|arm64> --version=<version>");
             return;
         }
 
         const architecture = parsedFlags["architecture"];
         if (architecture !== "amd64" && architecture !== "arm64") {
             console.error("Invalid architecture specified. Must be 'amd64' or 'arm64'.");
-            console.error("Usage:", "--baseDir <dir> --architecture <amd64|arm64>");
+            console.error("Usage:", "--baseDir=<dir> --architecture=<amd64|arm64> --version=<version>");
             return;
         }
         const baseDir = parsedFlags["baseDir"];
         if (typeof baseDir !== "string" || baseDir.length === 0) {
             console.error("Invalid baseDir specified.");
-            console.error("Usage:", "--baseDir <dir> --architecture <amd64|arm64>");
+            console.error("Usage:", "--baseDir=<dir> --architecture=<amd64|arm64> --version=<version>");
             return;
         }
 
