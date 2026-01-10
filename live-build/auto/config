@@ -30,11 +30,19 @@ replace_insertable_vars_in_all_config_files() {
     done
 }
 
-# remove package that are not relevant to the target architecture
+BOOTLOADERS_CONFIG=""
+
+# handle diffrent architectures
 if [ "$INSERT_TARGET_ARCH" = "amd64" ]; then
+
 	rm -f config/package-lists/arch-arm64.list.chroot
+
+	BOOTLOADERS_CONFIG="grub-pc grub-efi"
+
 elif [ "$INSERT_TARGET_ARCH" = "arm64" ]; then
 	rm -f config/package-lists/arch-amd64.list.chroot
+
+	BOOTLOADERS_CONFIG="grub-efi"
 else 
 	echo "Unsupported architecture: $INSERT_TARGET_ARCH"
 	exit 1
@@ -83,7 +91,7 @@ lb config noauto \
 	--debconf-frontend noninteractive \
 	--debootstrap-options "--include=apt-transport-https,ca-certificates,openssl" \
 	\
-	--bootloaders "grub-pc grub-efi" \
+	--bootloaders "$BOOTLOADERS_CONFIG" \
 	--bootappend-live "boot=live components quiet username=user hostname=leios" \
 	--initramfs live-boot \
 	--memtest memtest86+ \
