@@ -1,6 +1,6 @@
 import { CLICMD, type CLICMDExecMeta } from "@cleverjs/cli";
 import { Utils } from "../utils";
-import { readdir as fs_readdir, readFile } from "fs/promises";
+import { readdir as fs_readdir } from "fs/promises";
 
 export class PublishCMD extends CLICMD {
 
@@ -10,7 +10,7 @@ export class PublishCMD extends CLICMD {
 
     override async run(args: string[], meta: CLICMDExecMeta) {
 
-        const files = await this.checkFiles(await fs_readdir("."));
+        const files = await this.checkFiles(await fs_readdir("./live-build"));
 
         for (const [version, versionFiles] of Object.entries(files)) {
             console.log(`Uploading files for version ${version}...`);
@@ -39,7 +39,7 @@ export class PublishCMD extends CLICMD {
         }
 
 
-        const existingFiles = await this.getExistingFiles(Object.keys(versions));
+        const existingFiles = await this.getExistingUploadedFiles(Object.keys(versions));
         
         const results: Record<string, string[]> = {};
 
@@ -96,7 +96,7 @@ export class PublishCMD extends CLICMD {
             "--location",
             "--user",
             `${GIT_DEPLOY_KEY_ID}:${GIT_DEPLOY_KEY_SECRET}`,
-            "--upload-file", file,
+            "--upload-file", `./live-build/${file}`,
             `https://git.leicraftmc.de/api/v4/projects/5/packages/generic/release-${version}/${version}/${file}`,
         ]).exited;
 
@@ -107,7 +107,7 @@ export class PublishCMD extends CLICMD {
         }
     }
 
-    private async getExistingFiles(requestedVersions: string[]): Promise<Record<string, string[]>> {
+    private async getExistingUploadedFiles(requestedVersions: string[]): Promise<Record<string, string[]>> {
 
         const response = await fetch("https://git.leicraftmc.de/api/v4/projects/5/packages");
         if (!response.ok) {

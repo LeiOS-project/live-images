@@ -8,6 +8,6 @@ export class ConfigCMD extends CLICMD {
     override usage = "config";
 
     override async run(args: string[], meta: any) {
-        await Utils.execNativeCommand(["lb", "config"]);
+        await Utils.execNativeCommand(["lb", "config"], { cwd: "live-build" });
     }
 }

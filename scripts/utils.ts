@@ -9,12 +9,13 @@ export namespace Utils {
         return value;
     }
 
-    export function execNativeCommand(commandParts: string[]): Promise<number> {
+    export function execNativeCommand(commandParts: string[], options?: { cwd?: string }): Promise<number> {
 
         const proc = Bun.spawn({
             cmd: commandParts,
             stdout: "inherit",
-            stderr: "inherit"
+            stderr: "inherit",
+            ...options,
         });
 
         // // Stream stdout
@@ -34,8 +35,8 @@ export namespace Utils {
         return proc.exited;
     }
 
-    export function execShellCommand(command: string): Promise<number> {
-        return execNativeCommand(["bash", "-c", command],);
+    export function execShellCommand(command: string, options?: { cwd?: string }): Promise<number> {
+        return execNativeCommand(["bash", "-c", command], options);
     }
 
 }

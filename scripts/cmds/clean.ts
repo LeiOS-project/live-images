@@ -8,6 +8,6 @@ export class CleanCMD extends CLICMD {
     override usage = "clean";
 
     override async run(args: string[], meta: any) {
-        await Utils.execNativeCommand(["lb", "clean", "--purge"]);
+        await Utils.execNativeCommand(["lb", "clean", "--purge"], { cwd: "live-build" });
     }
 }
