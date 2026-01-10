@@ -1,6 +1,6 @@
 
 stages:
-  - build_and_publish_amd64
+  - build_and_publish
 
 
 workflow:
@@ -10,8 +10,8 @@ workflow:
     - if: $GIT_DEPLOY_KEY_SECRET
     - when: never
 
-build-and-publish-live-iso-amd64:
-  stage: build_and_publish_amd64
+build-and-publish-live-iso:
+  stage: build_and_publish
   when: manual
   allow_failure: false
   tags:
@@ -30,7 +30,7 @@ build-and-publish-live-iso-amd64:
     - bun install
 
   script:
-    - echo "--- Starting build ---"
+    - echo "--- Starting build for amd64 ---"
 
     # Pre clean
     - sudo ./lli clean
@@ -44,5 +44,13 @@ build-and-publish-live-iso-amd64:
 
     - sudo ./lli clean
 
-    - echo "--- Build complete ---"
+    - echo "--- Build for amd64 complete ---"
+
+  after_script:
+    - echo "Starting cleanup after build and publish job."
+      
+    # Clean up any remaining files if necessary
+    - rm -rf .
+
+    - echo "Build and publish job finished."
 
