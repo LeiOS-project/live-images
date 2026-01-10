@@ -1,0 +1,43 @@
+
+stages:
+  - build_and_publish
+
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web"
+    - if: $GIT_DEPLOY_KEY_ID
+    - if: $GIT_DEPLOY_KEY_SECRET
+    - when: never
+
+build-and-publish-live-iso:
+  stage: build_and_publish
+  when: manual
+  allow_failure: false
+  tags:
+    - leios-image-builder-amd64
+
+  before_script:
+    - |
+      if ! command -v bun &> /dev/null
+      then
+        # install bun
+        curl -fsSL https://bun.sh/install | bash
+        export PATH="$HOME/.bun/bin:$PATH"
+      fi
+    - bun install
+
+  script:
+    - echo "--- Starting build ---"
+
+    # Build the ISO
+    - sudo lb config
+    - sudo lb build
+
+    # Publish
+    - ./li publish
+
+    - sudo lb clean --purge
+
+    - echo "--- Build complete ---"
+
