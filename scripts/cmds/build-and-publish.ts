@@ -39,7 +39,7 @@ export class BuildAndPublishCMD extends CLICMD {
         await Utils.createTMPBuildDir();
 
         try {
-            await Utils.execNativeCommand(["lb", "build"], {
+            await Utils.execNativeCommand(["sudo", "lb", "build"], {
                 cwd: "./tmp/build",
                 env: {
                     "INSERT_TARGET_ARCH": architecture,
