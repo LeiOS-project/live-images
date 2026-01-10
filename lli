@@ -3,7 +3,7 @@
 set -euo pipefail
 
 # check if bun is installed
-if ! command -v bun &> /dev/null
+if ! command -v $HOME/.bun/bin/bun &> /dev/null
 then
     # ask to install bun
     read -p "Bun is not installed. Do you want to install it now? (y/n) " yn
