@@ -7,7 +7,7 @@ variables:
     value: "0.0.0"
     description: "Version of the LeiOS Live Installer"
   CURRENT_DATE_TAG:
-    value: "${CI_PIPELINE_CREATED_AT:%Y%m%d%H%M}"
+    value: ${CI_PIPELINE_CREATED_AT:%Y%m%d%H%M}
     description: "Current date in YYYYMMDDHHMM format"
 
 
