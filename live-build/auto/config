@@ -30,6 +30,16 @@ replace_insertable_vars_in_all_config_files() {
     done
 }
 
+# remove package that are not relevant to the target architecture
+if [ "$INSERT_TARGET_ARCH" = "amd64" ]; then
+	rm -f config/package-lists/arch-arm64.list.chroot
+elif [ "$INSERT_TARGET_ARCH" = "arm64" ]; then
+	rm -f config/package-lists/arch-amd64.list.chroot
+else 
+	echo "Unsupported architecture: $INSERT_TARGET_ARCH"
+	exit 1
+fi
+
 # Set insertable variables
 INSERT_TARGET_DATE=$(date +%Y%m%d)
 

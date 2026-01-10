@@ -70,7 +70,6 @@ init
 init-system-helpers
 initramfs-tools
 installation-report
-intel-microcode
 inxi
 iproute2
 iputils-ping
