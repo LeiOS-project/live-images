@@ -37,7 +37,8 @@ build-and-publish-live-iso:
         export PATH="$HOME/.bun/bin:$PATH"
       fi
     - bun install
-    - export CURRENT_DATE_TAG=$(date +%Y%m%d%H%M)
+    # - export CURRENT_DATE_TAG=$(date +%Y%m%d%H%M)
+    - export CURRENT_DATE_TAG=$(date +%Y%m%d)
   script:
 
     - echo "--- Starting build for amd64 ---"
