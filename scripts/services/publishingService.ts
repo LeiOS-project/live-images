@@ -50,10 +50,10 @@ export class PublishingService {
         for (const [version, versionFiles] of Object.entries(versions)) {
 
             const requiredFiles = [
-                `leios-${version}-${this.architecture}.hybrid.iso`,
-                `leios-${version}-${this.architecture}.files`,
-                `leios-${version}-${this.architecture}.packages`,
-                `leios-${version}-${this.architecture}.contents`,
+                `leios-live-${version}-${this.architecture}.hybrid.iso`,
+                `leios-live-${version}-${this.architecture}.files`,
+                `leios-live-${version}-${this.architecture}.packages`,
+                `leios-live-${version}-${this.architecture}.contents`,
             ];
 
             if (!requiredFiles.every(f => versionFiles.includes(f))) {
