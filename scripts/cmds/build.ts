@@ -1,47 +1,47 @@
-import { CLICMD, CMDFlag, CMDFlagsParser } from "@cleverjs/cli";
+import { CLIBaseCommand, CLICommandArg, CLICommandArgParser } from "@cleverjs/cli";
 import { Utils } from "../utils";
 
-export class BuildCMD extends CLICMD {
-
-    override name = "build";
-    override description = "Build the LeiOS live images.";
-    override usage = "build";
-
-    private flagParser = new CMDFlagsParser({
-        "--version": new CMDFlag("string", "The version of the LeiOS live image to build.", true, null),
-        "--architecture": new CMDFlag("string", "The target architecture to publish (amd64 or arm64).", true, null)
-    })
-
-    override async run(args: string[]) {
-
-        const parsedFlags = this.flagParser.parse(args);
-        if (typeof parsedFlags === "string") {
-            console.error("Error parsing flags:", parsedFlags);
-            process.exit(1);
+const args = CLICommandArg.defineCLIArgSpecs({
+    args: [],
+    flags: [
+        {
+            name: "version",
+            type: "string",
+            required: true,
+            description: "The version of the LeiOS live image to build.",
+            shortName: "v",
+        },
+        {
+            name: "architecture",
+            type: "enum",
+            required: true,
+            allowedValues: ["amd64", "arm64"],
+            description: "The target architecture to publish (amd64 or arm64).",
+            shortName: "a",
+            aliases: ["arch"]
         }
+    ],
+});
 
-        const version = parsedFlags["--version"];
-        const version_regex = /^[0-9]+\.[0-9]+\.[0-9]+-\d{8}$/;
-        if (typeof version !== "string" || !version_regex.test(version)) {
-            console.error("Invalid version specified.");
-            console.error("Usage:", "--base-dir=<dir> --architecture=<amd64|arm64> --version=<version>");
-            process.exit(1);
-        }
+export class BuildCMD extends CLIBaseCommand<typeof args> {
 
-        const architecture = parsedFlags["--architecture"];
-        if (architecture !== "amd64" && architecture !== "arm64") {
-            console.error("Invalid architecture specified. Must be 'amd64' or 'arm64'.");
-            console.error("Usage:", "--base-dir=<dir> --architecture=<amd64|arm64> --version=<version>");
-            process.exit(1);
-        }
+    constructor() {
+        super({
+            name: "build",
+            description: "Build the LeiOS live images.",
+            args: args
+        });
+    }
+
+    override async run(args: CLICommandArgParser.ParsedArgs<typeof this.args>): Promise<void> {
 
         await Utils.createTMPBuildDir();
 
         await Utils.execNativeCommand(["sudo", "lb", "build"], {
             cwd: "./tmp/build",
             env: {
-                "INSERT_TARGET_ARCH": architecture,
-                "INSERT_TARGET_LIVE_VERSION": version,
+                "INSERT_TARGET_ARCH": args.flags.architecture,
+                "INSERT_TARGET_LIVE_VERSION": args.flags.version,
                 //@TODO do a better solution for codename detection in the future
                 "INSERT_BASE_CODENAME": "trixie",
             }

@@ -11,6 +11,11 @@ export class PublishingService {
 
         const files = await this.checkFiles(await fs_readdir("./tmp/build"));
 
+        if (Object.keys(files).length === 0) {
+            console.log("No new files to upload.");
+            return;
+        }
+
         for (const [version, versionFiles] of Object.entries(files)) {
             console.log(`Uploading files for version ${version}...`);
             await this.uploadFiles(version, versionFiles);

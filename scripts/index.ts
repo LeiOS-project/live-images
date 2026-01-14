@@ -5,18 +5,14 @@ import { ConfigCMD } from "./cmds/config";
 import { CleanCMD } from "./cmds/clean";
 import { BuildAndPublishCMD } from "./cmds/build-and-publish";
 
-class CLI extends CLIApp {
+await new CLIApp()
 
-    protected override onInit() {
-        this.register(new ConfigCMD());
-        this.register(new BuildCMD());
-        this.register(new CleanCMD());
-        
-        this.register(new PublishCMD());
+    .register(new ConfigCMD())
+    .register(new BuildCMD())
+    .register(new CleanCMD())
 
-        this.register(new BuildAndPublishCMD())
-    }
+    .register(new PublishCMD())
 
-}
+    .register(new BuildAndPublishCMD())
 
-await new CLI("shell").handle(process.argv.slice(2));
+    .handle(process.argv.slice(2), "shell");

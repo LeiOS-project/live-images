@@ -1,13 +1,17 @@
-import { CLICMD } from "@cleverjs/cli";
+import { CLIBaseCommand } from "@cleverjs/cli";
 import { Utils } from "../utils";
 
-export class CleanCMD extends CLICMD {
+export class CleanCMD extends CLIBaseCommand {
 
-    override name = "clean";
-    override description = "Clean the LeiOS live images.";
-    override usage = "clean";
+    constructor() {
+        super({
+            name: "clean",
+            description: "Clean the LeiOS live images.",
+        });
+    }
 
-    override async run(args: string[], meta: any) {
+    override async run() {
         await Utils.removeTMPBuildDir();
+        console.log("Temporary build directory cleaned.");
     }
 }
