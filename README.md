@@ -15,15 +15,13 @@ and PXE images for LeiOS. This repository contains the configuration tree that
   - `xorriso`
   - `qemu-user-static`
   - `binfmt-support`
-  - `​mtools`
-  - `​dosfstools`
-  - `bun`,
+  - `bun`
 
 Install the core tooling on Debian based systems with:
 
 ```bash
 sudo apt-get update
-sudo apt-get install live-build debootstrap squashfs-tools xorriso qemu-user-static binfmt-support ​mtools dosfstools
+sudo apt-get install live-build debootstrap squashfs-tools xorriso qemu-user-static binfmt-support
 ```
 
 Register QEMU interpreters:
