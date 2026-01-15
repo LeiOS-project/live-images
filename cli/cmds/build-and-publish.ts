@@ -55,7 +55,7 @@ export class BuildAndPublishCMD extends CLIBaseCommand<typeof args> {
             process.exit(1);
         }
 
-        const service = new PublishingService(args.flags.architecture);
+        const service = new PublishingService("auto", args.flags.architecture);
         try {
             await service.run();
         } catch (err) {

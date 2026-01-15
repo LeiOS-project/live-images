@@ -26,4 +26,4 @@ if [ ! -d "node_modules" ]; then
     $HOME/.bun/bin/bun install --production
 fi
 
-$HOME/.bun/bin/bun ./scripts/index.ts "$@"
+$HOME/.bun/bin/bun ./cli/index.ts "$@"
