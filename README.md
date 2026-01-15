@@ -34,10 +34,10 @@ sudo systemctl restart systemd-binfmt
 
 ```bash
 # Configure the build (only required the first time or after config changes)
-sudo ./lli config
+sudo ./leios-live-build config
 
 # Build the ISO image (run from the repository root)
-sudo ./lli build
+sudo ./leios-live-build build
 ```
 
 The resulting images appear under `live-image-*` directories at the repository

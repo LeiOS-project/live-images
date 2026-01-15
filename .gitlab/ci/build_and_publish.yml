@@ -43,13 +43,13 @@ build-and-publish-live-iso:
 
     - echo "--- Starting build for amd64 ---"
 
-    - ./lli build-and-publish --architecture=amd64 --version=${LIVE_INSTALLER_VERSION}-${CURRENT_DATE_TAG}
+    - ./leios-live-build build-and-publish --architecture=amd64 --version=${LIVE_INSTALLER_VERSION}-${CURRENT_DATE_TAG}
 
     - echo "--- Build for amd64 complete ---"
 
     - echo "--- Starting build for arm64 ---"
 
-    - ./lli build-and-publish --architecture=arm64 --version=${LIVE_INSTALLER_VERSION}-${CURRENT_DATE_TAG}
+    - ./leios-live-build build-and-publish --architecture=arm64 --version=${LIVE_INSTALLER_VERSION}-${CURRENT_DATE_TAG}
 
     - echo "--- Build for arm64 complete ---"
 

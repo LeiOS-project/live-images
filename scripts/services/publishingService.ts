@@ -4,7 +4,8 @@ import { Utils } from "../utils";
 export class PublishingService {
 
     constructor(
-        protected readonly architecture: "amd64" | "arm64"
+        protected readonly version: string | "auto" = "auto",
+        protected readonly architecture: "amd64" | "arm64" | "all" = "all"
     ) {}
 
     async run() {
