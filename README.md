@@ -13,8 +13,6 @@ and PXE images for LeiOS. This repository contains the configuration tree that
   - `debootstrap`
   - `squashfs-tools`
   - `xorriso`
-  - `syslinux-common`
-  - `crossbuild-essential-arm64`
   - `qemu-user-static`
   - `binfmt-support`
   - `bun`,
