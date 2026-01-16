@@ -57,7 +57,7 @@ export namespace Utils {
         // create a temp dir
         await fs.mkdir("./tmp", { recursive: true, mode: 0o755 });
 
-        await fs.cp("./live-build", "./tmp/build", { recursive: true });
+        await fs.cp("./debian-live", "./tmp/build", { recursive: true });
     }
 
     export async function removeTMPBuildDir() {
