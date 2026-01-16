@@ -1,6 +1,7 @@
 
 stages:
-  - build_and_publish
+  - build_and_publish_amd64
+  - build_and_publish_arm64
 
 variables:
   LIVE_INSTALLER_VERSION:
@@ -19,9 +20,12 @@ workflow:
       when: never
     
     - when: always
+      variables:
+        # - export CURRENT_DATE_TAG=$(date +%Y%m%d)
+        CURRENT_DATE_TAG: "$(date +%Y%m%d)"
 
-build-and-publish-live-iso:
-  stage: build_and_publish
+build-and-publish-live-iso_amd64:
+  stage: build_and_publish_amd64
   allow_failure: false
   tags:
     - leios-image-builder-amd64
@@ -37,16 +41,39 @@ build-and-publish-live-iso:
         export PATH="$HOME/.bun/bin:$PATH"
       fi
     - bun install
-    # - export CURRENT_DATE_TAG=$(date +%Y%m%d%H%M)
-    - export CURRENT_DATE_TAG=$(date +%Y%m%d)
   script:
-
     - echo "--- Starting build for amd64 ---"
 
     - ./leios-live-build build-and-publish --architecture=amd64 --version=${LIVE_INSTALLER_VERSION}-${CURRENT_DATE_TAG}
 
     - echo "--- Build for amd64 complete ---"
 
+  after_script:
+    - echo "Starting cleanup after build and publish job."
+      
+    # Clean up any remaining files if necessary
+    - rm -rf ./*
+
+    - echo "Build and publish job finished."
+
+build-and-publish-live-iso_arm64:
+  stage: build_and_publish_arm64
+  allow_failure: false
+  tags:
+    - leios-image-builder-amd64
+
+  before_script:
+    #- sudo apt-get update
+    #- sudo apt-get install -y live-build debootstrap squashfs-tools xorriso syslinux-common
+    - |
+      if ! command -v bun &> /dev/null
+      then
+        # install bun
+        curl -fsSL https://bun.sh/install | bash
+        export PATH="$HOME/.bun/bin:$PATH"
+      fi
+    - bun install
+  script:
     - echo "--- Starting build for arm64 ---"
 
     - ./leios-live-build build-and-publish --architecture=arm64 --version=${LIVE_INSTALLER_VERSION}-${CURRENT_DATE_TAG}
@@ -60,4 +87,5 @@ build-and-publish-live-iso:
     - rm -rf ./*
 
     - echo "Build and publish job finished."
+
 
