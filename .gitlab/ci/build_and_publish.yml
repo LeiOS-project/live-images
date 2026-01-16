@@ -1,5 +1,6 @@
 
 stages:
+  - prepare
   - build_and_publish_amd64
   - build_and_publish_arm64
 
@@ -20,9 +21,15 @@ workflow:
       when: never
     
     - when: always
-      variables:
-        # - export CURRENT_DATE_TAG=$(date +%Y%m%d)
-        CURRENT_DATE_TAG: "$(date +%Y%m%d)"
+
+prepare-vars:
+  stage: prepare
+  script:
+    # - export CURRENT_DATE_TAG=$(date +%Y%m%d)
+    - echo "CURRENT_DATE_TAG=$(date +%Y%m%d)" >> build.env
+  artifacts:
+    reports:
+      dotenv: build.env
 
 build-and-publish-live-iso_amd64:
   stage: build_and_publish_amd64
