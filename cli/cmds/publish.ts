@@ -35,9 +35,10 @@ export class PublishCMD extends CLIBaseCommand<typeof args> {
         });
     }
 
-    override async run(args: CLICommandArgParser.ParsedArgs<typeof this.args>, ctx: CLICommandContext): Promise<void> {
+    override async run(args: CLICommandArgParser.ParsedArgs<typeof this.args>, ctx: CLICommandContext): Promise<boolean> {
         const service = new PublishingService(args.flags.version ?? "auto", args.flags.architecture);
         await service.run();
+        return true;
     }
 
 }

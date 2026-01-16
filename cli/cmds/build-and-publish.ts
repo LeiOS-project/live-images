@@ -34,7 +34,8 @@ export class BuildAndPublishCMD extends CLIBaseCommand<typeof args> {
             args: args
         });
     }
-    override async run(args: CLICommandArgParser.ParsedArgs<typeof this.args>): Promise<void> {
+    
+    override async run(args: CLICommandArgParser.ParsedArgs<typeof this.args>): Promise<boolean> {
 
 
         await Utils.createTMPBuildDir();
@@ -70,5 +71,7 @@ export class BuildAndPublishCMD extends CLIBaseCommand<typeof args> {
             console.error("Error during cleanup:", err);
             process.exit(1);
         }
+
+        return true;
     }
 }

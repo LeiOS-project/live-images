@@ -33,7 +33,7 @@ export class BuildCMD extends CLIBaseCommand<typeof args> {
         });
     }
 
-    override async run(args: CLICommandArgParser.ParsedArgs<typeof this.args>): Promise<void> {
+    override async run(args: CLICommandArgParser.ParsedArgs<typeof this.args>): Promise<boolean> {
 
         await Utils.createTMPBuildDir();
 
@@ -46,5 +46,7 @@ export class BuildCMD extends CLIBaseCommand<typeof args> {
                 "INSERT_BASE_CODENAME": "trixie",
             }
         });
+
+        return true;
     }
 }
