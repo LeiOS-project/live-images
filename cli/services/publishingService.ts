@@ -3,37 +3,53 @@ import { Utils } from "../utils";
 
 export class PublishingService {
 
+    protected readonly architectures: ["amd64", "arm64"] | ["amd64"] | ["arm64"];
+
     constructor(
         protected readonly version: string | "auto" = "auto",
-        protected readonly architecture: "amd64" | "arm64" | "all" = "all"
-    ) {}
-
-    async run() {
-
-        const files = await this.checkFiles(await fs_readdir("./tmp/build"));
-
-        if (Object.keys(files).length === 0) {
-            console.log("No new files to upload.");
-            return;
-        }
-
-        for (const [version, versionFiles] of Object.entries(files)) {
-            console.log(`Uploading files for version ${version}...`);
-            await this.uploadFiles(version, versionFiles);
+        architecture: "amd64" | "arm64" | "all" = "all"
+    ) {
+        if (architecture === "all") {
+            this.architectures = ["amd64", "arm64"];
+        } else {
+            this.architectures = [architecture];
         }
     }
 
-    private async checkFiles(files: string[]) {
+    async run() {
+
+        for (const arch of this.architectures) {
+
+            const files = await this.checkFiles(await fs_readdir("./tmp/build"), arch);
+
+            if (Object.keys(files).length === 0) {
+                console.log("No new files to upload for architecture:", arch);
+                return;
+            }
+
+            for (const [version, versionFiles] of Object.entries(files)) {
+                console.log(`Uploading files for version ${version}...`);
+                await this.uploadFiles(version, versionFiles);
+            }
+        }
+    }
+
+    private async checkFiles(files: string[], architecture: "amd64" | "arm64") {
 
         const versions: Record<string, string[]> = {};
-        
-        const regex = new RegExp(`^leios-live-([0-9]+\\.[0-9]+\\.[0-9]+-\\d{8})-${this.architecture}\\..*$`);
+
+        const regex = new RegExp(`^leios-live-([0-9]+\\.[0-9]+\\.[0-9]+-\\d{8})-${architecture}\\..*$`);
 
         for (const file of files) {
             const match = file.match(regex);
             if (match) {
                 const version = match[1];
                 if (typeof version !== "string") {
+                    continue;
+                }
+
+                if (this.version !== "auto" && version !== this.version) {
+                    console.warn(`Skipping file ${file} as its version ${version} does not match the specified version ${this.version}.`);
                     continue;
                 }
 
@@ -52,13 +68,14 @@ export class PublishingService {
         for (const [version, versionFiles] of Object.entries(versions)) {
 
             const requiredFiles = [
-                `leios-live-${version}-${this.architecture}.hybrid.iso`,
-                `leios-live-${version}-${this.architecture}.files`,
-                `leios-live-${version}-${this.architecture}.packages`,
-                `leios-live-${version}-${this.architecture}.contents`,
+                `leios-live-${version}-${architecture}.hybrid.iso`,
+                `leios-live-${version}-${architecture}.files`,
+                `leios-live-${version}-${architecture}.packages`,
+                `leios-live-${version}-${architecture}.contents`,
             ];
 
             if (!requiredFiles.every(f => versionFiles.includes(f))) {
+                console.error("Some files are missing to create a proper Release");
                 continue;
             }
             if (versionFiles.length !== requiredFiles.length) {
