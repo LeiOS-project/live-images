@@ -5,28 +5,24 @@
     "": {
       "name": "live-images",
       "dependencies": {
-        "@cleverjs/cli": "^2.2.0",
+        "@cleverjs/cli": "latest",
       },
       "devDependencies": {
         "@types/bun": "latest",
-        "typescript": "^5",
+        "typescript": "latest",
       },
     },
   },
   "packages": {
-    "@cleverjs/cli": ["@cleverjs/cli@2.2.0", "", { "dependencies": { "@cleverjs/utils": "^1.1.9" } }, "sha512-UWZZjA1jzkz5zQL8rrf1tpVFIq3PPe9yFijurtoCmTknSS/daPZBQVMguACYQYEFB8q+E27EBrZg/sBnEjb1nQ=="],
+    "@cleverjs/cli": ["@cleverjs/cli@2.3.0", "", { "dependencies": { "@cleverjs/utils": "^1.1.9" } }, "sha512-3BAKAZ217dRK/8z84prna5ltocEywUnYlypUOxpdqTwIN35JnA5qogPVax72f1ZOH15u4sUAqbSb2nL1j5sJ/w=="],
 
     "@cleverjs/utils": ["@cleverjs/utils@1.1.9", "", { "dependencies": { "low-level": "^1.2.5", "ptr.js": "^1.3.0" } }, "sha512-cj6Jt9qvLuL8zBiSTzIWM0UnkW9ua0t/R8PXmLo0LQySA8WPrq6plKZON0pRI9pGFwG4UATEguGjbrQQ2hku6A=="],
 
-    "@types/bun": ["@types/bun@1.3.2", "", { "dependencies": { "bun-types": "1.3.2" } }, "sha512-t15P7k5UIgHKkxwnMNkJbWlh/617rkDGEdSsDbu+qNHTaz9SKf7aC8fiIlUdD5RPpH6GEkP0cK7WlvmrEBRtWg=="],
+    "@types/bun": ["@types/bun@1.3.6", "", { "dependencies": { "bun-types": "1.3.6" } }, "sha512-uWCv6FO/8LcpREhenN1d1b6fcspAB+cefwD7uti8C8VffIv0Um08TKMn98FynpTiU38+y2dUO55T11NgDt8VAA=="],
 
     "@types/node": ["@types/node@24.10.1", "", { "dependencies": { "undici-types": "~7.16.0" } }, "sha512-GNWcUTRBgIRJD5zj+Tq0fKOJ5XZajIiBroOF0yvj2bSU1WvNdYS/dn9UxwsujGW4JX06dnHyjV2y9rRaybH0iQ=="],
 
-    "@types/react": ["@types/react@19.2.5", "", { "dependencies": { "csstype": "^3.0.2" } }, "sha512-keKxkZMqnDicuvFoJbzrhbtdLSPhj/rZThDlKWCDbgXmUg0rEUFtRssDXKYmtXluZlIqiC5VqkCgRwzuyLHKHw=="],
-
-    "bun-types": ["bun-types@1.3.2", "", { "dependencies": { "@types/node": "*" }, "peerDependencies": { "@types/react": "^19" } }, "sha512-i/Gln4tbzKNuxP70OWhJRZz1MRfvqExowP7U6JKoI8cntFrtxg7RJK3jvz7wQW54UuvNC8tbKHHri5fy74FVqg=="],
-
-    "csstype": ["csstype@3.2.0", "", {}, "sha512-si++xzRAY9iPp60roQiFta7OFbhrgvcthrhlNAGeQptSY25uJjkfUV8OArC3KLocB8JT8ohz+qgxWCmz8RhjIg=="],
+    "bun-types": ["bun-types@1.3.6", "", { "dependencies": { "@types/node": "*" } }, "sha512-OlFwHcnNV99r//9v5IIOgQ9Uk37gZqrNMCcqEaExdkVq3Avwqok1bJFmvGMCkCE0FqzdY8VMOZpfpR3lwI+CsQ=="],
 
     "low-level": ["low-level@1.2.5", "", {}, "sha512-1Lmiu2Wt+XHF7iCl1SmORXqxd3IO2Zx+EUpdgHZNw3Cct7u0IScdGfsYJvRk6QfE54jyZg9X/4YrZ0RxDjSCfg=="],
 
