@@ -2,6 +2,8 @@
 
 # Global Property
 title-text: "LeiOS Live {{INSERT_TARGET_LIVE_VERSION}} {{INSERT_TARGET_ARCH}}"
+title-color: "#ffffff"
+title-font: "Terminus Regular 16"
 desktop-image: "background.jpg"
 desktop-color: "#000000"
 terminal-font: "Terminus Regular 14"
