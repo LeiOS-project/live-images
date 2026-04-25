@@ -1,7 +1,8 @@
 
 stages:
   - prepare
-  - build_and_publish
+  - build_and_publish_amd64
+  - build_and_publish_arm64
 
 variables:
   LIVE_INSTALLER_VERSION:
@@ -30,19 +31,23 @@ prepare-vars:
     reports:
       dotenv: build.env
 
-build-and-publish-live-iso-amd64:
-  stage: build_and_publish
+build-and-publish-live-iso_amd64:
+  stage: build_and_publish_amd64
   allow_failure: false
   tags:
-    - glar-linux-large-amd64
+    - leios-image-builder-amd64
 
   before_script:
-    - apt-get update
-    - apt-get install -y sudo curl unzip live-build debootstrap squashfs-tools xorriso
-    - curl -fsSL https://bun.sh/install | bash
-    - export PATH="$HOME/.bun/bin:$PATH"
+    #- sudo apt-get update
+    #- sudo apt-get install -y live-build debootstrap squashfs-tools xorriso syslinux-common
+    - |
+      if ! command -v bun &> /dev/null
+      then
+        # install bun
+        curl -fsSL https://bun.sh/install | bash
+        export PATH="$HOME/.bun/bin:$PATH"
+      fi
     - bun install
-
   script:
     - echo "--- Starting build for amd64 ---"
 
@@ -52,31 +57,29 @@ build-and-publish-live-iso-amd64:
 
   after_script:
     - echo "Starting cleanup after build and publish job."
-    
+      
     # Clean up any remaining files if necessary
-    - rm -rf /opt/leios-live-build
-    - umount /opt/leios-live-build
-    - rm -f /opt/leios-live-build.img
+    - rm -rf ./*
 
     - echo "Build and publish job finished."
 
-build-and-publish-live-iso-arm64:
-  stage: build_and_publish
+build-and-publish-live-iso_arm64:
+  stage: build_and_publish_arm64
   allow_failure: false
   tags:
-    - glar-linux-large-amd64
+    - leios-image-builder-amd64
 
   before_script:
-    - apt-get update
-    - apt-get install -y sudo sudo curl unzip live-build debootstrap squashfs-tools xorriso qemu-user-static
-  
-    - mountpoint -q /proc/sys/fs/binfmt_misc || mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
-    - /usr/lib/systemd/systemd-binfmt
-
-    - curl -fsSL https://bun.sh/install | bash
-    - export PATH="$HOME/.bun/bin:$PATH"
+    #- sudo apt-get update
+    #- sudo apt-get install -y live-build debootstrap squashfs-tools xorriso syslinux-common
+    - |
+      if ! command -v bun &> /dev/null
+      then
+        # install bun
+        curl -fsSL https://bun.sh/install | bash
+        export PATH="$HOME/.bun/bin:$PATH"
+      fi
     - bun install
-
   script:
     - echo "--- Starting build for arm64 ---"
 
