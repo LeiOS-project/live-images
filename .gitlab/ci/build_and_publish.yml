@@ -43,6 +43,7 @@ build-and-publish-live-iso-amd64:
     - export PATH="$HOME/.bun/bin:$PATH"
     - bun install
 
+    - mount -o remount,exec /mnt
     - mkdir -p /mnt/leios-live-build
   script:
     - echo "--- Starting build for amd64 ---"
@@ -76,6 +77,7 @@ build-and-publish-live-iso-arm64:
     - export PATH="$HOME/.bun/bin:$PATH"
     - bun install
 
+    - mount -o remount,exec /mnt
     - mkdir -p /mnt/leios-live-build
   script:
     - echo "--- Starting build for arm64 ---"
