@@ -11,7 +11,7 @@ export class CleanCMD extends CLIBaseCommand {
     }
 
     override async run(_args: any, ctx: CTX) {
-        await Utils.removeTMPBuildDir();
+        await Utils.removeTMPBuildDir(ctx.get("cwd"));
         console.log("Temporary build directory cleaned.");
         return true;
     }

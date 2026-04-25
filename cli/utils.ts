@@ -54,7 +54,7 @@ export namespace Utils {
 
     export async function createTMPBuildDir(basePath?: string) {
         
-        await Utils.removeTMPBuildDir();
+        await Utils.removeTMPBuildDir(basePath);
 
         // create a temp dir
         await fs.mkdir(path.join(basePath ?? ".", "tmp"), { recursive: true, mode: 0o755 });

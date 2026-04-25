@@ -1,5 +1,6 @@
 import { CLIBaseCommand, CLICommandArg, CLICommandArgParser } from "@cleverjs/cli";
 import { Utils, type CTX } from "../utils";
+import path from "path";
 
 
 const args = CLICommandArg.defineCLIArgSpecs({
@@ -36,10 +37,12 @@ export class ConfigCMD extends CLIBaseCommand<typeof args> {
 
     override async run(args: CLICommandArgParser.ParsedArgs<typeof this.args>, ctx: CTX): Promise<boolean> {
 
-        await Utils.createTMPBuildDir();
+        const basePath = ctx.get("cwd");
+
+        await Utils.createTMPBuildDir(basePath);
 
         await Utils.execNativeCommand(["sudo", "lb", "config"], {
-            cwd: "./tmp/build",
+            cwd: path.join(basePath ?? ".", "tmp", "build"),
             env: {
                 "INSERT_TARGET_ARCH": args.flags.architecture,
                 "INSERT_TARGET_LIVE_VERSION": args.flags.version,

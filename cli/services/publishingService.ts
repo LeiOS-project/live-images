@@ -1,5 +1,6 @@
 import { readdir as fs_readdir } from "fs/promises";
 import { Utils } from "../utils";
+import path from "path";
 
 export class PublishingService {
 
@@ -7,7 +8,8 @@ export class PublishingService {
 
     constructor(
         protected readonly version: string | "auto" = "auto",
-        architecture: "amd64" | "arm64" | "all" = "all"
+        architecture: "amd64" | "arm64" | "all" = "all",
+        protected readonly basePath = "."
     ) {
         if (architecture === "all") {
             this.architectures = ["amd64", "arm64"];
@@ -20,7 +22,7 @@ export class PublishingService {
 
         for (const arch of this.architectures) {
 
-            const files = await this.checkFiles(await fs_readdir("./tmp/build"), arch);
+            const files = await this.checkFiles(await fs_readdir(path.join(this.basePath, "tmp", "build")), arch);
 
             if (Object.keys(files).length === 0) {
                 console.log("No new files to upload for architecture:", arch);
@@ -119,7 +121,7 @@ export class PublishingService {
             "--location",
             "--user",
             `${GIT_DEPLOY_KEY_ID}:${GIT_DEPLOY_KEY_SECRET}`,
-            "--upload-file", `./tmp/build/${file}`,
+            "--upload-file", path.join(this.basePath, "tmp", "build", file),
             `https://git.leicraftmc.de/api/v4/projects/5/packages/generic/release-${version}/${version}/${file}`,
         ]).exited;
 
