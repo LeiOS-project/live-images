@@ -42,10 +42,12 @@ build-and-publish-live-iso-amd64:
     - curl -fsSL https://bun.sh/install | bash
     - export PATH="$HOME/.bun/bin:$PATH"
     - bun install
+
+    - mkdir -p /tmp/leios-live-build
   script:
     - echo "--- Starting build for amd64 ---"
 
-    - ./leios-live-build build-and-publish --architecture=amd64 --version=${LIVE_INSTALLER_VERSION}-${CURRENT_DATE_TAG}
+    - ./leios-live-build --cwd=/tmp/leios-live-build build-and-publish --architecture=amd64 --version=${LIVE_INSTALLER_VERSION}-${CURRENT_DATE_TAG}
 
     - echo "--- Build for amd64 complete ---"
 
@@ -53,7 +55,7 @@ build-and-publish-live-iso-amd64:
     - echo "Starting cleanup after build and publish job."
       
     # Clean up any remaining files if necessary
-    - rm -rf ./*
+    - rm -rf /tmp/leios-live-build
 
     - echo "Build and publish job finished."
 
@@ -73,10 +75,12 @@ build-and-publish-live-iso-arm64:
     - curl -fsSL https://bun.sh/install | bash
     - export PATH="$HOME/.bun/bin:$PATH"
     - bun install
+
+    - mkdir -p /tmp/leios-live-build
   script:
     - echo "--- Starting build for arm64 ---"
 
-    - ./leios-live-build build-and-publish --architecture=arm64 --version=${LIVE_INSTALLER_VERSION}-${CURRENT_DATE_TAG}
+    - ./leios-live-build --cwd=/tmp/leios-live-build build-and-publish --architecture=arm64 --version=${LIVE_INSTALLER_VERSION}-${CURRENT_DATE_TAG}
 
     - echo "--- Build for arm64 complete ---"
 
@@ -84,7 +88,7 @@ build-and-publish-live-iso-arm64:
     - echo "Starting cleanup after build and publish job."
       
     # Clean up any remaining files if necessary
-    - rm -rf ./*
+    - rm -rf /tmp/leios-live-build
 
     - echo "Build and publish job finished."
 
