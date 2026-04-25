@@ -1,0 +1,98 @@
+
+stages:
+  - prepare
+  - build_and_publish_amd64
+  - build_and_publish_arm64
+
+variables:
+  LIVE_INSTALLER_VERSION:
+    value: "0.0.0"
+    description: "Version of the LeiOS Live Installer"
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE != "web" && $CI_PIPELINE_SOURCE != "api"
+      when : never
+    - if: $GIT_DEPLOY_KEY_ID == null
+      when: never
+    - if: $GIT_DEPLOY_KEY_SECRET == null
+      when: never
+    - if: $LIVE_INSTALLER_VERSION == "0.0.0"
+      when: never
+    
+    - when: always
+
+prepare-vars:
+  stage: prepare
+  script:
+    # - export CURRENT_DATE_TAG=$(date +%Y%m%d)
+    - echo "CURRENT_DATE_TAG=$(date +%Y%m%d)" >> build.env
+  artifacts:
+    reports:
+      dotenv: build.env
+
+build-and-publish-live-iso_amd64:
+  stage: build_and_publish_amd64
+  allow_failure: false
+  tags:
+    - leios-image-builder-amd64
+
+  before_script:
+    #- sudo apt-get update
+    #- sudo apt-get install -y live-build debootstrap squashfs-tools xorriso syslinux-common
+    - |
+      if ! command -v bun &> /dev/null
+      then
+        # install bun
+        curl -fsSL https://bun.sh/install | bash
+        export PATH="$HOME/.bun/bin:$PATH"
+      fi
+    - bun install
+  script:
+    - echo "--- Starting build for amd64 ---"
+
+    - ./leios-live-build build-and-publish --architecture=amd64 --version=${LIVE_INSTALLER_VERSION}-${CURRENT_DATE_TAG}
+
+    - echo "--- Build for amd64 complete ---"
+
+  after_script:
+    - echo "Starting cleanup after build and publish job."
+      
+    # Clean up any remaining files if necessary
+    - rm -rf ./*
+
+    - echo "Build and publish job finished."
+
+build-and-publish-live-iso_arm64:
+  stage: build_and_publish_arm64
+  allow_failure: false
+  tags:
+    - leios-image-builder-amd64
+
+  before_script:
+    #- sudo apt-get update
+    #- sudo apt-get install -y live-build debootstrap squashfs-tools xorriso syslinux-common
+    - |
+      if ! command -v bun &> /dev/null
+      then
+        # install bun
+        curl -fsSL https://bun.sh/install | bash
+        export PATH="$HOME/.bun/bin:$PATH"
+      fi
+    - bun install
+  script:
+    - echo "--- Starting build for arm64 ---"
+
+    - ./leios-live-build build-and-publish --architecture=arm64 --version=${LIVE_INSTALLER_VERSION}-${CURRENT_DATE_TAG}
+
+    - echo "--- Build for arm64 complete ---"
+
+  after_script:
+    - echo "Starting cleanup after build and publish job."
+      
+    # Clean up any remaining files if necessary
+    - rm -rf ./*
+
+    - echo "Build and publish job finished."
+
+
