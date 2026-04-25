@@ -46,7 +46,7 @@ build-and-publish-live-iso-amd64:
   script:
     - echo "--- Starting build for amd64 ---"
 
-    - ./leios-live-build --architecture=amd64 --version=${LIVE_INSTALLER_VERSION}-${CURRENT_DATE_TAG}
+    - ./leios-live-build build-and-publish --architecture=amd64 --version=${LIVE_INSTALLER_VERSION}-${CURRENT_DATE_TAG}
 
     - echo "--- Build for amd64 complete ---"
 
@@ -80,7 +80,7 @@ build-and-publish-live-iso-arm64:
   script:
     - echo "--- Starting build for arm64 ---"
 
-    - ./leios-live-build --architecture=arm64 --version=${LIVE_INSTALLER_VERSION}-${CURRENT_DATE_TAG}
+    - ./leios-live-build build-and-publish --architecture=arm64 --version=${LIVE_INSTALLER_VERSION}-${CURRENT_DATE_TAG}
 
     - echo "--- Build for arm64 complete ---"
 
