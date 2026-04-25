@@ -1,4 +1,6 @@
+import type { CLICommandContext } from "@cleverjs/cli";
 import fs from "fs/promises";
+import path from "path";
 
 export namespace Utils {
 
@@ -50,21 +52,30 @@ export namespace Utils {
         return execNativeCommand(["bash", "-c", command], options);
     }
 
-    export async function createTMPBuildDir() {
+    export async function createTMPBuildDir(basePath?: string) {
         
         await Utils.removeTMPBuildDir();
 
         // create a temp dir
-        await fs.mkdir("./tmp", { recursive: true, mode: 0o755 });
+        await fs.mkdir(path.join(basePath ?? ".", "tmp"), { recursive: true, mode: 0o755 });
 
-        await fs.cp("./debian-live", "./tmp/build", { recursive: true });
+        await fs.cp("./debian-live", path.join(basePath ?? ".", "tmp", "build"), { recursive: true });
     }
 
-    export async function removeTMPBuildDir() {
-        if (await fs.access("./tmp/build").then(() => true).catch(() => false)) {
-            await Utils.execNativeCommand(["sudo", "lb", "clean", "--purge"], { cwd: "./tmp/build" });
+    export async function removeTMPBuildDir(basePath?: string) {
+        
+        if (await fs.access(path.join(basePath ?? ".", "tmp", "build")).then(() => true).catch(() => false)) {
+            await Utils.execNativeCommand(
+                ["sudo", "lb", "clean", "--purge"],
+                { cwd: path.join(basePath ?? ".", "tmp", "build") }
+            );
         }
-        await fs.rm("./tmp", { recursive: true, force: true });
+
+        await fs.rm(path.join(basePath ?? ".", "tmp"), { recursive: true, force: true });
     }
 
 }
+
+export type CTX = CLICommandContext<{
+    cwd?: string;
+}>;

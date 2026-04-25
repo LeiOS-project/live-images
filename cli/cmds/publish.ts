@@ -1,5 +1,6 @@
 import { CLIBaseCommand, CLICommandArg, CLICommandArgParser, type CLICommandContext } from "@cleverjs/cli";
 import { PublishingService } from "../services/publishingService";
+import type { CTX } from "../utils";
 
 const args = CLICommandArg.defineCLIArgSpecs({
     args: [],
@@ -35,7 +36,7 @@ export class PublishCMD extends CLIBaseCommand<typeof args> {
         });
     }
 
-    override async run(args: CLICommandArgParser.ParsedArgs<typeof this.args>, ctx: CLICommandContext): Promise<boolean> {
+    override async run(args: CLICommandArgParser.ParsedArgs<typeof this.args>, ctx: CTX): Promise<boolean> {
         const service = new PublishingService(args.flags.version ?? "auto", args.flags.architecture);
         await service.run();
         return true;

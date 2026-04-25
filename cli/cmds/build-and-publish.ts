@@ -1,6 +1,7 @@
 import { CLIBaseCommand, CLICommandArg, CLICommandArgParser } from "@cleverjs/cli";
-import { Utils } from "../utils";
+import { Utils, type CTX } from "../utils";
 import { PublishingService } from "../services/publishingService";
+import path from "path";
 
 const args = CLICommandArg.defineCLIArgSpecs({
     args: [],
@@ -35,14 +36,15 @@ export class BuildAndPublishCMD extends CLIBaseCommand<typeof args> {
         });
     }
     
-    override async run(args: CLICommandArgParser.ParsedArgs<typeof this.args>): Promise<boolean> {
+    override async run(args: CLICommandArgParser.ParsedArgs<typeof this.args>, ctx: CTX): Promise<boolean> {
 
+        const basePath = ctx.get("cwd");
 
-        await Utils.createTMPBuildDir();
+        await Utils.createTMPBuildDir(basePath);
 
         try {
             await Utils.execNativeCommand(["sudo", "lb", "build"], {
-                cwd: "./tmp/build",
+                cwd: path.join(basePath ?? ".", "tmp", "build"),
                 env: {
                     "INSERT_TARGET_ARCH": args.flags.architecture,
                     "INSERT_TARGET_LIVE_VERSION": args.flags.version,
@@ -52,7 +54,7 @@ export class BuildAndPublishCMD extends CLIBaseCommand<typeof args> {
             });
         } catch (err) {
             console.error("Error during build:", err);
-            await Utils.removeTMPBuildDir();
+            await Utils.removeTMPBuildDir(basePath);
             process.exit(1);
         }
 
@@ -61,12 +63,12 @@ export class BuildAndPublishCMD extends CLIBaseCommand<typeof args> {
             await service.run();
         } catch (err) {
             console.error("Error during publishing:", err);
-            await Utils.removeTMPBuildDir();
+            await Utils.removeTMPBuildDir(basePath);
             process.exit(1);
         }
 
         try {
-            await Utils.removeTMPBuildDir();
+            await Utils.removeTMPBuildDir(basePath);
         } catch (err) {
             console.error("Error during cleanup:", err);
             process.exit(1);

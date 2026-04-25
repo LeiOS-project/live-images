@@ -1,5 +1,5 @@
 import { CLIBaseCommand, CLICommandArg, CLICommandArgParser } from "@cleverjs/cli";
-import { Utils } from "../utils";
+import { Utils, type CTX } from "../utils";
 
 const args = CLICommandArg.defineCLIArgSpecs({
     args: [],
@@ -33,7 +33,7 @@ export class BuildCMD extends CLIBaseCommand<typeof args> {
         });
     }
 
-    override async run(args: CLICommandArgParser.ParsedArgs<typeof this.args>): Promise<boolean> {
+    override async run(args: CLICommandArgParser.ParsedArgs<typeof this.args>, ctx: CTX): Promise<boolean> {
 
         await Utils.createTMPBuildDir();
 

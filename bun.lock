@@ -5,16 +5,16 @@
     "": {
       "name": "live-images",
       "dependencies": {
-        "@cleverjs/cli": "latest",
+        "@cleverjs/cli": "^2.4.0",
       },
       "devDependencies": {
-        "@types/bun": "latest",
-        "typescript": "latest",
+        "@types/bun": "^1.3.6",
+        "typescript": "^5.9.3",
       },
     },
   },
   "packages": {
-    "@cleverjs/cli": ["@cleverjs/cli@2.3.0", "", { "dependencies": { "@cleverjs/utils": "^1.1.9" } }, "sha512-3BAKAZ217dRK/8z84prna5ltocEywUnYlypUOxpdqTwIN35JnA5qogPVax72f1ZOH15u4sUAqbSb2nL1j5sJ/w=="],
+    "@cleverjs/cli": ["@cleverjs/cli@2.4.0", "", { "dependencies": { "@cleverjs/utils": "^1.1.9" } }, "sha512-1rKxM0UCNfl7IE+93oKaNwhjoyKY/Cp5RTqcANhVHp+RfzNz8CMgThc1ivkaprBQBp2VTBjhforoWnmVqk9fQg=="],
 
     "@cleverjs/utils": ["@cleverjs/utils@1.1.9", "", { "dependencies": { "low-level": "^1.2.5", "ptr.js": "^1.3.0" } }, "sha512-cj6Jt9qvLuL8zBiSTzIWM0UnkW9ua0t/R8PXmLo0LQySA8WPrq6plKZON0pRI9pGFwG4UATEguGjbrQQ2hku6A=="],
 

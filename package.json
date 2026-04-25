@@ -7,6 +7,6 @@
         "typescript": "^5.9.3"
     },
     "dependencies": {
-        "@cleverjs/cli": "^2.3.0"
+        "@cleverjs/cli": "^2.4.0"
     }
 }
