@@ -42,7 +42,7 @@ build-and-publish-live-iso-amd64:
     - curl -fsSL https://bun.sh/install | bash
     - export PATH="$HOME/.bun/bin:$PATH"
     - bun install
-
+    - mount -o remount,exec /builds || true
   script:
     - echo "--- Starting build for amd64 ---"
 
@@ -74,7 +74,7 @@ build-and-publish-live-iso-arm64:
     - curl -fsSL https://bun.sh/install | bash
     - export PATH="$HOME/.bun/bin:$PATH"
     - bun install
-
+    - mount -o remount,exec /builds || true
   script:
     - echo "--- Starting build for arm64 ---"
 
