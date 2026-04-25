@@ -24,8 +24,6 @@ workflow:
 prepare-vars:
   stage: prepare
   script:
-    - ls -l /dev/
-    - mount -l
     # - export CURRENT_DATE_TAG=$(date +%Y%m%d)
     - echo "CURRENT_DATE_TAG=$(date +%Y%m%d)" >> build.env
   artifacts:
