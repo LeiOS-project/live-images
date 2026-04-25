@@ -66,8 +66,11 @@ build-and-publish-live-iso-arm64:
 
   before_script:
     - apt-get update
-    - apt-get install -y sudo curl unzip live-build debootstrap squashfs-tools xorriso qemu-user-static binfmt-support
-    - update-binfmts --enable qemu-aarch64
+    - apt-get install -y sudo curl unzip live-build debootstrap squashfs-tools xorriso qemu-user-static
+  
+    - mountpoint -q /proc/sys/fs/binfmt_misc || mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
+    - /usr/lib/systemd/systemd-binfmt
+
     - curl -fsSL https://bun.sh/install | bash
     - export PATH="$HOME/.bun/bin:$PATH"
     - bun install
