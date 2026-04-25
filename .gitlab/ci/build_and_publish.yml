@@ -1,8 +1,7 @@
 
 stages:
   - prepare
-  - build_and_publish_amd64
-  - build_and_publish_arm64
+  - build_and_publish
 
 variables:
   LIVE_INSTALLER_VERSION:
@@ -31,23 +30,19 @@ prepare-vars:
     reports:
       dotenv: build.env
 
-build-and-publish-live-iso_amd64:
-  stage: build_and_publish_amd64
+build-and-publish-live-iso-amd64:
+  stage: build_and_publish
   allow_failure: false
   tags:
-    - leios-image-builder-amd64
+    - glar-linux-large-amd64
 
   before_script:
-    #- sudo apt-get update
-    #- sudo apt-get install -y live-build debootstrap squashfs-tools xorriso syslinux-common
-    - |
-      if ! command -v bun &> /dev/null
-      then
-        # install bun
-        curl -fsSL https://bun.sh/install | bash
-        export PATH="$HOME/.bun/bin:$PATH"
-      fi
+    - sudo apt-get update
+    - sudo apt-get install -y live-build debootstrap squashfs-tools xorriso
+    - curl -fsSL https://bun.sh/install | bash
+    - export PATH="$HOME/.bun/bin:$PATH"
     - bun install
+
   script:
     - echo "--- Starting build for amd64 ---"
 
@@ -63,23 +58,20 @@ build-and-publish-live-iso_amd64:
 
     - echo "Build and publish job finished."
 
-build-and-publish-live-iso_arm64:
-  stage: build_and_publish_arm64
+build-and-publish-live-iso-arm64:
+  stage: build_and_publish
   allow_failure: false
   tags:
-    - leios-image-builder-amd64
+    - glar-linux-large-amd64
 
   before_script:
-    #- sudo apt-get update
-    #- sudo apt-get install -y live-build debootstrap squashfs-tools xorriso syslinux-common
-    - |
-      if ! command -v bun &> /dev/null
-      then
-        # install bun
-        curl -fsSL https://bun.sh/install | bash
-        export PATH="$HOME/.bun/bin:$PATH"
-      fi
+    - sudo apt-get update
+    - sudo apt-get install -y live-build debootstrap squashfs-tools xorriso qemu-user-static binfmt-support
+    - sudo update-binfmts --enable qemu-aarch64
+    - curl -fsSL https://bun.sh/install | bash
+    - export PATH="$HOME/.bun/bin:$PATH"
     - bun install
+
   script:
     - echo "--- Starting build for arm64 ---"
 
