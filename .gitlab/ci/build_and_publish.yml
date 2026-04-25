@@ -38,7 +38,7 @@ build-and-publish-live-iso-amd64:
 
   before_script:
     - apt-get update
-    - apt-get install -y sudo curl unzip live-build debootstrap squashfs-tools xorriso
+    - apt-get install -y sudo e2fsprogs curl unzip live-build debootstrap squashfs-tools xorriso
     - curl -fsSL https://bun.sh/install | bash
     - export PATH="$HOME/.bun/bin:$PATH"
     - bun install
@@ -73,7 +73,7 @@ build-and-publish-live-iso-arm64:
 
   before_script:
     - apt-get update
-    - apt-get install -y sudo curl unzip live-build debootstrap squashfs-tools xorriso qemu-user-static
+    - apt-get install -y sudo e2fsprogs curl unzip live-build debootstrap squashfs-tools xorriso qemu-user-static
   
     - mountpoint -q /proc/sys/fs/binfmt_misc || mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
     - /usr/lib/systemd/systemd-binfmt
