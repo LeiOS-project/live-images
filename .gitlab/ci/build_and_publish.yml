@@ -37,7 +37,7 @@ build-and-publish-live-iso-amd64:
     - glar-linux-large-amd64
 
   before_script:
-    - apt-get update && apt-get -y install sudo
+    - apt-get update && apt-get -y install sudo curl
     - sudo apt-get install -y live-build debootstrap squashfs-tools xorriso
     - curl -fsSL https://bun.sh/install | bash
     - export PATH="$HOME/.bun/bin:$PATH"
@@ -65,7 +65,7 @@ build-and-publish-live-iso-arm64:
     - glar-linux-large-amd64
 
   before_script:
-    - apt-get update && apt-get -y install sudo
+    - apt-get update && apt-get -y install sudo curl
     - sudo apt-get install -y live-build debootstrap squashfs-tools xorriso qemu-user-static binfmt-support
     - sudo update-binfmts --enable qemu-aarch64
     - curl -fsSL https://bun.sh/install | bash
