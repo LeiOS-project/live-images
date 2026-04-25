@@ -11,6 +11,7 @@ and PXE images for LeiOS. This repository contains the configuration tree that
 - Required packages:
   - `sudo`
   - `curl`
+  - `unzip`
   - `live-build`
   - `debootstrap`
   - `squashfs-tools`
@@ -23,7 +24,7 @@ Install the core tooling on Debian based systems with:
 
 ```bash
 sudo apt-get update
-sudo apt-get install sudo curl live-build debootstrap squashfs-tools xorriso qemu-user-static binfmt-support
+sudo apt-get install sudo curl unzip live-build debootstrap squashfs-tools xorriso qemu-user-static binfmt-support
 ```
 
 Register QEMU interpreters:
