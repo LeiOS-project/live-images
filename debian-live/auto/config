@@ -71,9 +71,6 @@ chmod +x config/hooks/normal/*.hook.chroot
 lb config noauto \
 	--clean \
 	\
-	--bootstrap mmdebstrap \
-    --mmdebstrap-options "--variant=apt --mode=unshare" \
-	\
 	--architectures "$INSERT_TARGET_ARCH" \
 	\
 	--distribution "$INSERT_BASE_CODENAME" \
