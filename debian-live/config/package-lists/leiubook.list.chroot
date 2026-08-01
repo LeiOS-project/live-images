@@ -164,7 +164,7 @@ less
 # libzstd1
 linux-image-{{INSERT_TARGET_ARCH}}
 linux-sysctl-defaults
-live-build
+# live-build
 lm-sensors
 locales
 login
