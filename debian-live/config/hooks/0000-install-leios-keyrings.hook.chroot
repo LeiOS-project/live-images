@@ -1,5 +1,0 @@
-#!/bin/bash
-
-set -e
-
-curl -fsSL https://pkg.repo.leios.dev/public-key.gpg | gpg --dearmor -o /usr/share/keyrings/leios-archive-keyring.gpg
