@@ -43,13 +43,14 @@ export class BuildAndPublishCMD extends CLIBaseCommand<typeof args> {
         await Utils.createTMPBuildDir(basePath);
 
         try {
-            await Utils.execNativeCommand(["sudo", "lb", "build"], {
+            await Utils.execNativeCommand(["bash", path.resolve(basePath ?? ".", "cli/build-rootless.sh")], {
                 cwd: path.join(basePath ?? ".", "tmp", "build"),
                 env: {
                     "INSERT_TARGET_ARCH": args.flags.architecture,
                     "INSERT_TARGET_LIVE_VERSION": args.flags.version,
                     //@TODO do a better solution for codename detection in the future
                     "INSERT_BASE_CODENAME": "trixie",
+                    "PATH": process.env.PATH
                 }
             });
         } catch (err) {

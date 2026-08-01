@@ -38,18 +38,8 @@ export class ConfigCMD extends CLIBaseCommand<typeof args> {
     override async run(args: CLICommandArgParser.ParsedArgs<typeof this.args>, ctx: CTX): Promise<boolean> {
 
         const basePath = ctx.get("cwd");
-
-        await Utils.createTMPBuildDir(basePath);
-
-        await Utils.execNativeCommand(["sudo", "lb", "config"], {
-            cwd: path.join(basePath ?? ".", "tmp", "build"),
-            env: {
-                "INSERT_TARGET_ARCH": args.flags.architecture,
-                "INSERT_TARGET_LIVE_VERSION": args.flags.version,
-                //@TODO do a better solution for codename detection in the future
-                "INSERT_BASE_CODENAME": "trixie",
-            }
-        });
+        
+        console.log("Config command is obsolete with mmdebstrap. Doing nothing.");
 
         return true;
     }

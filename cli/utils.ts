@@ -15,9 +15,6 @@ export namespace Utils {
     export async function execNativeCommand(commandParts: string[], options?: { cwd?: string, env?: Record<string, string | undefined> }): Promise<number> {
 
         let finalCommandParts = commandParts;
-        if (commandParts[0] === "sudo" && options?.env) {
-            finalCommandParts = ["sudo", ...Object.entries(options.env).map(([key, value]) => `${key}=${value}`), ...commandParts.slice(1)];
-        }
 
         const proc = Bun.spawn({
             cmd: finalCommandParts,
@@ -63,14 +60,6 @@ export namespace Utils {
     }
 
     export async function removeTMPBuildDir(basePath?: string) {
-        
-        if (await fs.access(path.join(basePath ?? ".", "tmp", "build")).then(() => true).catch(() => false)) {
-            await Utils.execNativeCommand(
-                ["sudo", "lb", "clean", "--purge"],
-                { cwd: path.join(basePath ?? ".", "tmp", "build") }
-            );
-        }
-
         await fs.rm(path.join(basePath ?? ".", "tmp"), { recursive: true, force: true });
     }
 
