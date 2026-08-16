@@ -2,9 +2,10 @@
 
 set -e
 
-# LeiOS
-curl -fsSL https://pkg.repo.leios.dev/public-key.gpg -o /usr/share/keyrings/leios-public-key.gpg
+# LeiOS keyring is shipped via includes.chroot/usr/share/keyrings/leios-public-key.gpg
+# and trusted during the live-build via config/archives/leios.key.chroot.
+# It is intentionally not downloaded here so the build does not depend on the repo being online.
 
-# Firefox
-sudo install -d -m 0755 /etc/apt/keyrings
-wget -q https://packages.mozilla.org/apt/repo-signing-key.gpg -O- | sudo tee /etc/apt/keyrings/packages.mozilla.org.asc > /dev/null
+# Firefox keyring is shipped via includes.chroot/usr/share/keyrings/packages.mozilla.org.asc
+# and trusted during the live-build via config/archives/mozilla.key.chroot.
+# It is intentionally not downloaded here so the build does not depend on the repo being online.
