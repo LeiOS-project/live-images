@@ -1,0 +1,13 @@
+// Force dpkg to keep the maintainer's version of conffiles when a package
+// replaces a file that already exists in the build chroot. This is needed
+// for leios.system.base-files, which diverts files from base-files and then
+// provides its own versions (e.g. /etc/motd).
+//
+// This file has the .chroot suffix, so live-build will install it during the
+// build-only phase and remove it before the final image is created. It does
+// NOT end up in the live or installed system.
+
+DPkg::Options {
+   "--force-confdef";
+   "--force-confold";
+};
