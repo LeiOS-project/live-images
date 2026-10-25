@@ -1,15 +1,18 @@
 [Desktop Entry]
 Type=Application
 Version=1.0
-Encoding=UTF-8
 Name=Install LeiOS
+Name[de]=LeiOS installieren
 GenericName=LeiOS Installer
-Exec=sudo calamares
-Comment=LeiOS Installer
-Keywords=calamares;system;install;leios;installer
-Icon=install-debian
+GenericName[de]=LeiOS-Installationsprogramm
+Comment=Install LeiOS on this computer
+Comment[de]=LeiOS auf diesem Computer installieren
+Keywords=calamares;system;install;leios;installer;
+TryExec=calamares
+Exec=/usr/libexec/leios-live/install-leios
+Icon=leios-logo
 Terminal=false
-MultipleArgs=false
-Categories=Qt;Applications;System
+Categories=Qt;System;
 StartupWMClass=calamares
-StartupNotify=True
+StartupNotify=true
+X-AppStream-Ignore=true

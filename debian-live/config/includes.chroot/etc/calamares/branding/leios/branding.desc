@@ -30,10 +30,12 @@ images:
 
 slideshow:               "show.qml"
 
+# Colours of the LeiOS colour scheme (leios.theme.kde-plasma.theme): window
+# background, text and the selection blue.
 style:
-   SidebarBackground:    "#26475b"
-   SidebarText:          "#FFFFFF"
-   SidebarTextCurrent:   "#fbfbfb"
-   SidebarBackgroundCurrent: "#265370"
+   SidebarBackground:        "#192742"
+   SidebarText:              "#D3DAE3"
+   SidebarTextCurrent:       "#FFFFFF"
+   SidebarBackgroundCurrent: "#3184B4"
 
 slideshowAPI: 2

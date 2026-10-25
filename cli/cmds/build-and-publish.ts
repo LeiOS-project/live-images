@@ -21,6 +21,14 @@ const args = CLICommandArg.defineCLIArgSpecs({
             description: "The target architecture to publish (amd64 or arm64).",
             shortName: "a",
             aliases: ["arch"]
+        },
+        {
+            name: "suite",
+            type: "enum",
+            default: "stable",
+            allowedValues: ["stable", "testing"],
+            description: "The LeiOS repository suite to install the LeiOS packages from (stable or testing).",
+            shortName: "s",
         }
     ],
 });
@@ -50,6 +58,7 @@ export class BuildAndPublishCMD extends CLIBaseCommand<typeof args> {
                     "INSERT_TARGET_LIVE_VERSION": args.flags.version,
                     //@TODO do a better solution for codename detection in the future
                     "INSERT_BASE_CODENAME": "trixie",
+                "INSERT_LEIOS_SUITE": args.flags.suite,
                 }
             });
         } catch (err) {

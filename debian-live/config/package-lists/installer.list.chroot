@@ -1,1 +1,12 @@
+# Calamares, the LeiOS installer, and what its modules run on the live system
+# (unpackfs: rsync; encrypted installs: cryptsetup, keyutils) or need on the
+# installed system (cryptsetup-initramfs to unlock an encrypted root).
 calamares
+rsync
+cryptsetup
+cryptsetup-initramfs
+keyutils
+btrfs-progs
+efibootmgr
+# Qt's X11 platform plugin, for running the installer in a Plasma X11 session
+libxcb-cursor0

@@ -1,1 +1,6 @@
 intel-microcode
+amd64-microcode
+# The installer sets up GRUB for the firmware it runs on: grub-efi-amd64 (with
+# Secure Boot support) comes from base.list.chroot, BIOS needs grub-pc-bin.
+grub-efi-amd64-signed
+grub-pc-bin

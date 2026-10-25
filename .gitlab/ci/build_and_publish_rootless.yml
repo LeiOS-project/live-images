@@ -7,6 +7,10 @@ variables:
   LIVE_INSTALLER_VERSION:
     value: "0.0.0"
     description: "Version of the LeiOS Live Installer"
+  LEIOS_SUITE:
+    value: "stable"
+    options: ["stable", "testing"]
+    description: "LeiOS repository suite to install the LeiOS packages from"
 
 workflow:
   rules:
@@ -46,7 +50,7 @@ build-and-publish-live-iso-amd64:
   script:
     - echo "--- Starting build for amd64 ---"
 
-    - ./leios-live-build build-and-publish --architecture=amd64 --version=${LIVE_INSTALLER_VERSION}-${CURRENT_DATE_TAG}
+    - ./leios-live-build build-and-publish --architecture=amd64 --version=${LIVE_INSTALLER_VERSION}-${CURRENT_DATE_TAG} --suite=${LEIOS_SUITE}
 
     - echo "--- Build for amd64 complete ---"
 
@@ -80,7 +84,7 @@ build-and-publish-live-iso-arm64:
   script:
     - echo "--- Starting build for arm64 ---"
 
-    - ./leios-live-build build-and-publish --architecture=arm64 --version=${LIVE_INSTALLER_VERSION}-${CURRENT_DATE_TAG}
+    - ./leios-live-build build-and-publish --architecture=arm64 --version=${LIVE_INSTALLER_VERSION}-${CURRENT_DATE_TAG} --suite=${LEIOS_SUITE}
 
     - echo "--- Build for arm64 complete ---"
 

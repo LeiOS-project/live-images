@@ -1,11 +1,12 @@
+# LeiOS system packages
 leios.system.branding-meta-files
 leios.system.base-files
+leios.system.performance-tweaks.base
+leios.system.locales.en-de
 
-leios.theme.grub-theme
-
-leios.theme.plasmoids.digitalclock
-
+# The LeiOS look: depends on all LeiOS theme packages
+leios.theme.aio
 
 fastfetch
 firefox-devedition-l10n-de
-firefox-devedition-l10n-en
+firefox-devedition

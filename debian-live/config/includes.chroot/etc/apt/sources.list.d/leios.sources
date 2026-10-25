@@ -1,6 +1,5 @@
 Types: deb
-URIs: http://pkg.repo.leios.dev/leios/
-Suites: stable
+URIs: https://pkg.repo.leios.dev/leios/
+Suites: {{INSERT_LEIOS_SUITE}}
 Components: main
-# Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/leios-public-key.gpg

@@ -1,1 +1,1 @@
-deb http://pkg.repo.leios.dev/leios/ stable main
+deb https://pkg.repo.leios.dev/leios/ {{INSERT_LEIOS_SUITE}} main

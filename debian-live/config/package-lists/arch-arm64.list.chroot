@@ -1,0 +1,2 @@
+# Secure Boot support for grub-efi-arm64 (base.list.chroot)
+grub-efi-arm64-signed

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -e
+
+# Offer en_DE.UTF-8 (English with German formats, from
+# leios.system.locales.en-de) in the installer. Calamares lists the locales of
+# /usr/share/i18n/SUPPORTED and enables the chosen ones in the installed
+# system's /etc/locale.gen, which is copied from this image, so both need an
+# entry. The SUPPORTED entry belongs to the installer only and is removed from
+# installed systems again (shellprocess@leios-live-cleanup).
+
+grep -qx 'en_DE.UTF-8 UTF-8' /usr/share/i18n/SUPPORTED ||
+	echo 'en_DE.UTF-8 UTF-8' >> /usr/share/i18n/SUPPORTED
+
+grep -qE '^#? *en_DE\.UTF-8 UTF-8$' /etc/locale.gen ||
+	echo '# en_DE.UTF-8 UTF-8' >> /etc/locale.gen

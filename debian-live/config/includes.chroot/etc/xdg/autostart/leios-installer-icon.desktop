@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Add LeiOS Installer Icon
+Comment=Puts the LeiOS installer on the desktop of the live session
+Exec=/usr/libexec/leios-live/add-installer-icon
+NoDisplay=true
+StartupNotify=false
+X-GNOME-Autostart-Phase=Initialization
+X-KDE-autostart-phase=1

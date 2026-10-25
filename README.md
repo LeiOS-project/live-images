@@ -36,54 +36,63 @@ sudo systemctl restart systemd-binfmt
 ## Quick Start
 
 ```bash
-# Configure the build (only required the first time or after config changes)
-sudo ./leios-live-build config
+# Build the amd64 ISO (run from the repository root)
+./leios-live-build build --version=1.0.0-$(date +%Y%m%d) --architecture=amd64
 
-# Build the ISO image (run from the repository root)
-sudo ./leios-live-build build
+# Build a test ISO with the LeiOS packages from the testing repository
+./leios-live-build build --version=1.0.0-$(date +%Y%m%d) --architecture=amd64 --suite=testing
+
+# Remove the build directory again
+./leios-live-build clean
 ```
 
-The resulting images appear under `live-image-*` directories at the repository
-root. Use `sudo lb clean` to remove build artifacts, or run the helper scripts in
-`auto/`:
-
-- `auto/config` mirrors `lb config`
-- `auto/build` wraps `lb build`
-- `auto/clean` performs a full clean cycle
-
-For reproducible builds, run `sudo lb clean --purge` to drop cached packages
-before rebuilding.
+The build runs in `tmp/build` (a copy of `debian-live/`), and the ISO ends up
+there as `leios-live-<version>-<architecture>.hybrid.iso`. `--suite` (default
+`stable`) selects the LeiOS repository suite the image installs from and that
+installed systems use. In CI, set the pipeline variables
+`LIVE_INSTALLER_VERSION` and `LEIOS_SUITE`.
 
 ## Repository Layout
 
-- `config/`: Main live-build configuration tree
-  - `binary/`, `bootstrap/`, `chroot/`, `common/`, `source/`: Stage specific
-    configuration snippets consumed by `lb`
-  - `bootloaders/`: Menu and binary assets for extlinux, isolinux, pxelinux, and
-    syslinux targets
-  - `hooks/`: Chroot hooks executed during image creation (package cache updates,
-    cleanup tasks, etc.)
-  - `package-lists/`: Package selections grouped by image profile
-- `auto/`: Shell wrappers for repeatable configure/build/clean invocations
+- `cli/`: The `leios-live-build` commands (config, build, publish, clean)
+- `debian-live/auto/`: `config` fills the `{{INSERT_*}}` placeholders in the
+  configuration and runs `lb config`; `build` and `clean` wrap `lb`
+- `debian-live/config/`: The live-build configuration
+  - `archives/`: Extra apt repositories (LeiOS, Mozilla) used during the build
+  - `bootloaders/`: The live boot menu (GRUB, with the LeiOS GRUB theme)
+  - `hooks/`: Chroot hooks executed during image creation
+  - `includes.chroot/`: Files copied into the image: apt sources, the
+    Calamares installer configuration and branding, and the installer
+    launcher (live session only)
+  - `package-lists/`: The packages of the image: `base` (system, desktop,
+    firmware, tools), `leios` (LeiOS packages: `leios.theme.aio` brings all
+    themes), `installer`, `live` and per-architecture lists
+
+## The Installer
+
+The image starts a KDE Plasma live session with the LeiOS look and an
+"Install LeiOS" icon on the desktop, which runs Calamares
+(`/usr/libexec/leios-live/install-leios`). Calamares copies the live system to
+the disk, sets up GRUB (EFI with Secure Boot, or BIOS), removes the live and
+installer packages and, with `shellprocess@leios-live-cleanup`, the
+installer's files that are not part of any package. The installer also offers
+the `en_DE.UTF-8` locale of `leios.system.locales.en-de`.
 
 Generated `live-image-*` directories can be removed safely; re-run the build to
 regenerate them.
 
 ## Customization
 
-- Adjust package selections in `config/package-lists/` to add or remove software
-- Modify boot menus under `config/bootloaders/*/`
-- Update chroot behavior by editing scripts in `config/hooks/`
-- Override lower-level defaults via snippets in `config/common/` or other stage
-  directories
-
-After changing configuration files, rerun `sudo lb config` before rebuilding.
+- Adjust package selections in `debian-live/config/package-lists/`
+- Modify the boot menu under `debian-live/config/bootloaders/`
+- Update chroot behavior by editing scripts in `debian-live/config/hooks/`
+- Change the installer in `debian-live/config/includes.chroot/etc/calamares/`
 
 ## Troubleshooting
 
 - Ensure `/tmp` and the working directory have several gigabytes of free space
 - Clear stale artifacts with `sudo lb clean --purge` if builds fail unexpectedly
-- Inspect `/var/log/live-build.log` inside the build tree for detailed errors
+- Inspect `tmp/build/build.log` for detailed errors
 
 ## Useful Links
 

@@ -1,0 +1,17 @@
+#!/bin/sh
+# Starts the LeiOS installer (Calamares) as root in the live session. Part of
+# the LeiOS live image; Calamares removes it from installed systems
+# (shellprocess@leios-live-cleanup).
+
+# Keep the session's display: Wayland (Plasma's default) or X11.
+ENV_TO_KEEP=WAYLAND_DISPLAY,XDG_RUNTIME_DIR,XDG_SESSION_TYPE,XDG_CURRENT_DESKTOP,DISPLAY,XAUTHORITY,QT_QPA_PLATFORM,LANG,LANGUAGE
+
+# Like Debian's live images: Calamares' partitioning must not see the live
+# system's /etc/fstab (the overlay root), so move it aside while it runs.
+sudo mv /etc/fstab /etc/fstab.leios-live 2>/dev/null
+
+status=0
+sudo --preserve-env="$ENV_TO_KEEP" calamares "$@" || status=$?
+
+sudo mv /etc/fstab.leios-live /etc/fstab 2>/dev/null
+exit "$status"

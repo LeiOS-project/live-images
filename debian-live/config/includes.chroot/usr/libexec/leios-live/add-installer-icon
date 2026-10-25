@@ -1,0 +1,14 @@
+#!/bin/sh
+# Puts the "Install LeiOS" launcher on the live user's desktop. Part of the
+# LeiOS live image; Calamares removes it from installed systems
+# (shellprocess@leios-live-cleanup).
+
+# Create the (localised) desktop folder first, so the launcher ends up in the
+# folder Plasma shows.
+xdg-user-dirs-update 2>/dev/null
+DESKTOP=$(xdg-user-dir DESKTOP 2>/dev/null)
+[ -n "$DESKTOP" ] || DESKTOP="$HOME/Desktop"
+mkdir -p "$DESKTOP"
+
+# Executable launchers are trusted by Plasma's desktop.
+install -m 0755 /usr/share/applications/calamares.desktop "$DESKTOP/install-leios.desktop"

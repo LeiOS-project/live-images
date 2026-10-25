@@ -59,6 +59,7 @@ register_insertable_env_var INSERT_TARGET_DATE
 register_insertable_env_var INSERT_TARGET_ARCH
 register_insertable_env_var INSERT_TARGET_LIVE_VERSION
 register_insertable_env_var INSERT_BASE_CODENAME
+register_insertable_env_var INSERT_LEIOS_SUITE
 
 # Replace insertable variables in config files
 replace_insertable_vars_in_all_config_files
@@ -92,7 +93,7 @@ lb config noauto \
 	--debootstrap-options "--include=apt-transport-https,ca-certificates,openssl" \
 	\
 	--bootloaders "$BOOTLOADERS_CONFIG" \
-	--bootappend-live "boot=live components quiet username=user hostname=leios" \
+	--bootappend-live "boot=live components quiet splash username=user hostname=leios" \
 	--initramfs live-boot \
 	--memtest memtest86+ \
 	\
