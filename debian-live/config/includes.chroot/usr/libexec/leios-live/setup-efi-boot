@@ -1,0 +1,72 @@
+#!/bin/sh
+# Prepares the EFI system partition of a new LeiOS installation for the boot
+# chain LeiOS uses: Debian's shim and GRUB, signed for Secure Boot. Part of the
+# LeiOS live image: Calamares runs it in the installed system after the
+# bootloader module (shellprocess@leios-efi-boot) and removes it afterwards
+# (shellprocess@leios-live-cleanup).
+#
+# Debian's signed GRUB always reads its configuration from /EFI/debian/grub.cfg
+# on the EFI system partition. LeiOS' GRUB and the grub.cfg grub-install writes
+# for it live in /EFI/leios instead: grub-install names the directory after
+# GRUB_DISTRIBUTOR (LeiOS), also when Debian's grub packages run it on updates.
+# So /EFI/debian/grub.cfg loads the grub.cfg next to the GRUB that was started.
+
+set -e
+
+ESP=/boot/efi
+CFG="$ESP/EFI/debian/grub.cfg"
+MARKER="# LeiOS: load the grub.cfg next to the GRUB that was started."
+
+# Nothing to do for BIOS installations.
+[ -d /sys/firmware/efi ] || exit 0
+
+if ! mountpoint -q "$ESP"; then
+	echo "setup-efi-boot: no EFI system partition mounted at $ESP" >&2
+	exit 1
+fi
+
+# Keep the copy in the removable media path (see grub-install in this
+# directory) up to date when Debian's grub packages reinstall GRUB.
+for pkg in grub-efi-amd64 grub-efi-arm64 grub-efi-ia32; do
+	if dpkg-query -W -f '${Status}' "$pkg" 2>/dev/null | grep -q ' installed$'; then
+		echo "$pkg grub2/force_efi_extra_removable boolean true" | debconf-set-selections
+	fi
+done
+
+# The filesystem with /boot/grub, from the grub.cfg grub-install just wrote.
+fs_uuid() {
+	sed -n 's/^search\.fs_uuid \([^ ]*\).*/\1/p' "$1" 2>/dev/null | head -n 1
+}
+
+# /EFI/debian/grub.cfg can belong to another system on this disk: Debian, or a
+# LeiOS that was converted from Debian. Keep it while that system's /boot
+# filesystem still exists, so that system keeps booting.
+if [ -f "$CFG" ] && ! grep -qF "$MARKER" "$CFG"; then
+	other=$(fs_uuid "$CFG")
+	if [ -n "$other" ] && [ "$other" != "$(fs_uuid "$ESP/EFI/leios/grub.cfg")" ] &&
+		blkid -U "$other" >/dev/null 2>&1; then
+		echo "setup-efi-boot: $CFG belongs to another installed system" \
+			"(filesystem $other) and is kept; with Secure Boot, that" \
+			"system's boot menu starts first." >&2
+		exit 0
+	fi
+fi
+
+mkdir -p "$ESP/EFI/debian"
+cat > "$CFG" <<EOF
+$MARKER
+#
+# Debian's GRUB signed for Secure Boot, which LeiOS uses, always reads this
+# file. grub-install puts LeiOS' GRUB and its grub.cfg into /EFI/leios, and a
+# copy into /EFI/BOOT for firmware without boot entries.
+# Written by the LeiOS installer.
+if [ -z "\$leios_redirected" ]; then
+	# Only once: started from /EFI/debian, \$cmdpath/grub.cfg is this file.
+	set leios_redirected=1
+	export leios_redirected
+	if [ -f "\$cmdpath/grub.cfg" ]; then
+		configfile "\$cmdpath/grub.cfg"
+	fi
+fi
+configfile "(\$root)/EFI/leios/grub.cfg"
+EOF

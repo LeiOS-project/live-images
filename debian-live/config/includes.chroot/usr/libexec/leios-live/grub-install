@@ -1,0 +1,20 @@
+#!/bin/sh
+# grub-install for the LeiOS installer (grubInstall in Calamares'
+# bootloader.conf). Part of the LeiOS live image; Calamares removes it from
+# installed systems (shellprocess@leios-live-cleanup).
+#
+# On EFI it also installs to the removable media path /EFI/BOOT, so systems
+# whose firmware loses its boot entries still start. Unlike Calamares' own
+# fallback copy (installEFIFallback), --force-extra-removable puts the signed
+# shim there, which Secure Boot needs. Debian's grub packages keep that copy
+# up to date (grub2/force_efi_extra_removable, set by setup-efi-boot).
+
+for arg; do
+	case $arg in
+		--target=*-efi)
+			exec /usr/sbin/grub-install --force-extra-removable "$@"
+			;;
+	esac
+done
+
+exec /usr/sbin/grub-install "$@"

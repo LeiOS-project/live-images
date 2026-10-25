@@ -81,6 +81,24 @@ the `en_DE.UTF-8` locale of `leios.system.locales.en-de`.
 Generated `live-image-*` directories can be removed safely; re-run the build to
 regenerate them.
 
+### Secure Boot
+
+The image boots with Debian's shim (signed by Microsoft's third-party UEFI CA,
+2011 and 2023), Debian's signed GRUB and Debian's signed kernel, and installed
+systems use the same chain. Firmware that only trusts Microsoft's Windows CA
+("Secured-core" PCs) rejects it, like every Linux distribution: enable
+"Allow Microsoft 3rd Party UEFI CA" (or similar) in the firmware settings.
+
+Debian's signed GRUB always reads `/EFI/debian/grub.cfg` on the EFI system
+partition, while GRUB for LeiOS lives in `/EFI/leios`: that is where
+`grub-install` puts it, also on every GRUB update, as `GRUB_DISTRIBUTOR` is
+LeiOS. So after installing GRUB, `shellprocess@leios-efi-boot`
+(`/usr/libexec/leios-live/setup-efi-boot`) writes an `/EFI/debian/grub.cfg`
+that loads LeiOS' configuration, unless that file belongs to another system
+that is still installed. The `grub-install` wrapper Calamares calls also
+installs shim and GRUB to the removable media path `/EFI/BOOT`, and Debian's
+grub packages keep that copy up to date (`grub2/force_efi_extra_removable`).
+
 ## Customization
 
 - Adjust package selections in `debian-live/config/package-lists/`
