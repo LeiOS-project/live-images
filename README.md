@@ -92,10 +92,12 @@ For firmware without that option, the image carries Microsoft's third-party
 UEFI CA certificates (2011 and 2023) with instructions in `secureboot/`, both
 in the ISO and in its EFI partition (hook
 `9200-add-secureboot-certificates-to-efi-image.hook.binary`), so they can be
-added to the firmware's `db` from the USB stick. Firmware that can only trust
-single EFI files (Insyde's "Select an UEFI file as trusted for executing")
-shows only `.efi` files; the instructions point it to `EFI/BOOT/BOOTX64.EFI`,
-the same shim installed systems use.
+added to the firmware's `db` from the USB stick. Where the firmware setup
+can't do that (Acer's firmware only offers to trust single `.efi` files by
+hash, which didn't help for the signed shim on our test laptop),
+`secureboot/leios-secureboot.py
+--add`, run in the live system with Secure Boot off, appends Microsoft UEFI
+CA 2023 with Microsoft's KEK-signed update `DBUpdate3P2023.bin`.
 
 Debian's signed GRUB always reads `/EFI/debian/grub.cfg` on the EFI system
 partition, while GRUB for LeiOS lives in `/EFI/leios`: that is where
