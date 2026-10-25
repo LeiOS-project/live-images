@@ -1,0 +1,20 @@
+#!/bin/sh
+
+set -e
+
+# Put the grub-pc package into the image for the installer: on BIOS systems,
+# it replaces grub-efi-amd64 in the installed system, so that GRUB updates
+# reach the boot sector as well (/usr/libexec/leios-live/setup-bios-boot).
+# grub-pc conflicts with the image's grub-efi-amd64, so it is only shipped as
+# a package file; its dependencies are installed (grub-pc-bin comes from
+# arch-amd64.list.chroot). Installed systems don't keep the file
+# (shellprocess@leios-live-cleanup).
+
+dpkg-query -W -f '${Status}' grub-pc-bin 2>/dev/null | grep -q ' installed$' || exit 0
+
+# The same version as grub-pc-bin, which grub-pc depends on exactly.
+version=$(dpkg-query -W -f '${Version}' grub-pc-bin)
+
+mkdir -p /usr/share/leios-live
+cd /usr/share/leios-live
+apt-get download "grub-pc=$version"

@@ -1,0 +1,49 @@
+#!/bin/sh
+
+set -e
+
+# Puts the Secure Boot certificates (secureboot/, from config/includes.binary)
+# into the image's EFI system partition, boot/grub/efi.img, as well: on a USB
+# stick written with dd, the firmware's file browser only sees that partition,
+# not the ISO 9660 filesystem with the rest of the image.
+#
+# Binary hook: live-build runs it as root in binary/, after creating efi.img
+# and before writing the ISO. efi.img is made again with room for the files;
+# like live-build itself, this uses mtools and dosfstools in the build chroot.
+
+IMG=boot/grub/efi.img
+[ -f "$IMG" ] && [ -d secureboot ] || exit 0
+
+in_chroot() {
+	chroot ../chroot /usr/bin/env -i PATH=/usr/sbin:/usr/bin:/sbin:/bin \
+		DEBIAN_FRONTEND=noninteractive MTOOLS_SKIP_CHECK=1 "$@"
+}
+
+# live-build removes the mtools it installed for efi.img again.
+for tool in mcopy:mtools mkfs.msdos:dosfstools; do
+	in_chroot sh -c "command -v ${tool%%:*} >/dev/null" ||
+		in_chroot apt-get install -y --no-install-recommends "${tool#*:}"
+done
+
+WORK=/tmp/leios-efi-image
+rm -rf "../chroot$WORK"
+mkdir -p "../chroot$WORK"
+cp "$IMG" "../chroot$WORK/old.img"
+cp -r secureboot "../chroot$WORK/"
+
+# Keep live-build's volume id (the 32-bit serial at offset 39, little endian)
+# and add 256 KiB.
+set -- $(od -An -tx1 -j39 -N4 "$IMG")
+volid=$4$3$2$1
+kib=$(( $(stat -c %s "$IMG") / 1024 + 256 ))
+
+in_chroot sh -e -c "
+	cd $WORK
+	mkdir files
+	mcopy -s -m -i old.img ::/EFI ::/boot files/
+	mkfs.msdos -C new.img $kib -i $volid >/dev/null
+	mcopy -s -m -i new.img files/EFI files/boot secureboot ::/
+"
+
+cp "../chroot$WORK/new.img" "$IMG"
+rm -rf "../chroot$WORK"

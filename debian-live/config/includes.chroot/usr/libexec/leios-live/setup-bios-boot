@@ -1,0 +1,28 @@
+#!/bin/sh
+# Installs grub-pc, Debian's GRUB package for BIOS systems, in a new LeiOS
+# installation on a BIOS system. Part of the LeiOS live image: Calamares runs
+# it in the installed system before setting up GRUB
+# (shellprocess@leios-bios-boot) and removes it afterwards
+# (shellprocess@leios-live-cleanup).
+#
+# The image comes with grub-efi-amd64, which reinstalls GRUB on updates only
+# on EFI systems. grub-pc replaces it, so that GRUB updates reach the boot
+# sector as well; the grub-install wrapper in this directory tells grub-pc
+# where Calamares installs GRUB. As grub-pc conflicts with grub-efi-amd64, the
+# image carries it as a package file (hook
+# 9300-include-grub-pc-for-bios-installs).
+
+set -e
+
+# Nothing to do for EFI installations.
+[ ! -d /sys/firmware/efi ] || exit 0
+
+set -- /usr/share/leios-live/grub-pc_*.deb
+if [ ! -f "$1" ]; then
+	echo "setup-bios-boot: no grub-pc package in /usr/share/leios-live" >&2
+	exit 1
+fi
+
+# GRUB is not installed yet (no /boot/grub/i386-pc/core.img), so grub-pc does
+# not ask where to install it.
+DEBIAN_FRONTEND=noninteractive apt-get install -y "$1"
