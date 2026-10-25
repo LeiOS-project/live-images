@@ -88,6 +88,14 @@ The image boots with Debian's shim (signed by Microsoft's third-party UEFI CA,
 systems use the same chain. Firmware that only trusts Microsoft's Windows CA
 ("Secured-core" PCs) rejects it, like every Linux distribution: enable
 "Allow Microsoft 3rd Party UEFI CA" (or similar) in the firmware settings.
+For firmware without that option, the image carries Microsoft's third-party
+UEFI CA certificates (2011 and 2023) with instructions in `secureboot/`, both
+in the ISO and in its EFI partition (hook
+`9200-add-secureboot-certificates-to-efi-image.hook.binary`), so they can be
+added to the firmware's `db` from the USB stick. Firmware that can only trust
+single EFI files (Insyde's "Select an UEFI file as trusted for executing")
+shows only `.efi` files; the instructions point it to `EFI/BOOT/BOOTX64.EFI`,
+the same shim installed systems use.
 
 Debian's signed GRUB always reads `/EFI/debian/grub.cfg` on the EFI system
 partition, while GRUB for LeiOS lives in `/EFI/leios`: that is where

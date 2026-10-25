@@ -8,13 +8,36 @@
 # fallback copy (installEFIFallback), --force-extra-removable puts the signed
 # shim there, which Secure Boot needs. Debian's grub packages keep that copy
 # up to date (grub2/force_efi_extra_removable, set by setup-efi-boot).
+#
+# On BIOS it tells grub-pc (installed by setup-bios-boot) where GRUB went, so
+# that grub-pc reinstalls it there on updates. Like the Debian installer, it
+# names the device by /dev/disk/by-id, which doesn't change with the order of
+# the disks.
+
+set -e
 
 for arg; do
 	case $arg in
 		--target=*-efi)
 			exec /usr/sbin/grub-install --force-extra-removable "$@"
 			;;
+		--target=i386-pc)
+			bios=1
+			;;
 	esac
+	device=$arg
 done
 
-exec /usr/sbin/grub-install "$@"
+/usr/sbin/grub-install "$@"
+
+# Calamares passes the device last.
+if [ "$bios" ] && [ -b "$device" ]; then
+	for link in /dev/disk/by-id/*; do
+		if [ "$(readlink -f "$link")" = "$(readlink -f "$device")" ]; then
+			device=$link
+			break
+		fi
+	done
+	echo "grub-pc grub-pc/install_devices multiselect $device" |
+		debconf-set-selections
+fi
