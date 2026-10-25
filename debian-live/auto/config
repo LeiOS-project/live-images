@@ -66,8 +66,8 @@ replace_insertable_vars_in_all_config_files
 
 # Prepare hooks
 mkdir -p config/hooks/normal/
-cp ./config/hooks/*.hook.chroot ./config/hooks/*.hook.binary config/hooks/normal/
-chmod +x config/hooks/normal/*.hook.chroot config/hooks/normal/*.hook.binary
+cp ./config/hooks/*.hook.chroot config/hooks/normal/
+chmod +x config/hooks/normal/*.hook.chroot
 
 lb config noauto \
 	--clean \

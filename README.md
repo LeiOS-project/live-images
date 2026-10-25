@@ -87,17 +87,8 @@ The image boots with Debian's shim (signed by Microsoft's third-party UEFI CA,
 2011 and 2023), Debian's signed GRUB and Debian's signed kernel, and installed
 systems use the same chain. Firmware that only trusts Microsoft's Windows CA
 ("Secured-core" PCs) rejects it, like every Linux distribution: enable
-"Allow Microsoft 3rd Party UEFI CA" (or similar) in the firmware settings.
-For firmware without that option, the image carries Microsoft's third-party
-UEFI CA certificates (2011 and 2023) with instructions in `secureboot/`, both
-in the ISO and in its EFI partition (hook
-`9200-add-secureboot-certificates-to-efi-image.hook.binary`), so they can be
-added to the firmware's `db` from the USB stick. Where the firmware setup
-can't do that (Acer's firmware only offers to trust single `.efi` files by
-hash, which didn't help for the signed shim on our test laptop),
-`secureboot/leios-secureboot.py
---add`, run in the live system with Secure Boot off, appends Microsoft UEFI
-CA 2023 with Microsoft's KEK-signed update `DBUpdate3P2023.bin`.
+"Allow Microsoft 3rd Party UEFI CA" (or similar) in the firmware settings, or
+turn Secure Boot off.
 
 Debian's signed GRUB always reads `/EFI/debian/grub.cfg` on the EFI system
 partition, while GRUB for LeiOS lives in `/EFI/leios`: that is where
@@ -108,6 +99,17 @@ that loads LeiOS' configuration, unless that file belongs to another system
 that is still installed. The `grub-install` wrapper Calamares calls also
 installs shim and GRUB to the removable media path `/EFI/BOOT`, and Debian's
 grub packages keep that copy up to date (`grub2/force_efi_extra_removable`).
+
+### BIOS systems
+
+The image has `grub-efi-amd64`, which only reinstalls GRUB on updates on EFI
+systems. On BIOS systems, `shellprocess@leios-bios-boot`
+(`/usr/libexec/leios-live/setup-bios-boot`) replaces it with `grub-pc` before
+GRUB is installed; the image carries that package as a file (hook
+`9300-include-grub-pc-for-bios-installs.hook.chroot`), as it conflicts with
+`grub-efi-amd64`. The `grub-install` wrapper then records the boot disk in
+`grub-pc/install_devices` (by `/dev/disk/by-id`, like the Debian installer),
+so GRUB updates also reach the disk's boot sector.
 
 ## Customization
 
