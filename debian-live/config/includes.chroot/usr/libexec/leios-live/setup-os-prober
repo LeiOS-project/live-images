@@ -1,0 +1,30 @@
+#!/bin/sh
+# Turns GRUB's detection of other operating systems (os-prober) on or off in a
+# new LeiOS installation, as chosen on the installer's "Dual Boot" page. Part
+# of the LeiOS live image: Calamares runs it in the installed system before
+# setting up GRUB (contextualprocess@leios-dualboot) and removes it afterwards
+# (shellprocess@leios-live-cleanup).
+#
+# Debian's GRUB runs os-prober only with GRUB_DISABLE_OS_PROBER=false. The
+# setting goes into its own file, which update-grub reads after
+# /etc/default/grub, and stays there as the place to change it later.
+
+set -e
+
+case "$1" in
+	enabled) disable_os_prober=false ;;
+	disabled) disable_os_prober=true ;;
+	*)
+		echo "usage: setup-os-prober enabled|disabled" >&2
+		exit 2
+		;;
+esac
+
+mkdir -p /etc/default/grub.d
+cat > /etc/default/grub.d/90-leios-os-prober.cfg <<CFG
+# Dual boot detection, chosen in the LeiOS installer. With "false", the boot
+# menu also lists the other operating systems on this computer, such as
+# Windows (found by os-prober); with "true", it only lists LeiOS.
+# Run "sudo update-grub" after changing it.
+GRUB_DISABLE_OS_PROBER=$disable_os_prober
+CFG

@@ -101,6 +101,18 @@ that is still installed. The `grub-install` wrapper Calamares calls also
 installs shim and GRUB to the removable media path `/EFI/BOOT`, and Debian's
 grub packages keep that copy up to date (`grub2/force_efi_extra_removable`).
 
+### Dual boot detection
+
+Debian's GRUB only lists other operating systems (found by `os-prober`) with
+`GRUB_DISABLE_OS_PROBER=false`. The installer asks on its "Dual Boot" page
+(`packagechooser@leios-dualboot`, after the partitioning page) whether to turn
+that on; "Enable dual boot detection" is preselected. The choice is stored in
+GlobalStorage as `packagechooser_leios-dualboot`, and
+`contextualprocess@leios-dualboot` runs `/usr/libexec/leios-live/setup-os-prober`
+in the installed system before GRUB is set up. It writes the setting to
+`/etc/default/grub.d/90-leios-os-prober.cfg`, where it can be changed later.
+The page's pictures (`dualboot-*.png`) are in the branding directory.
+
 ### BIOS systems
 
 The image has `grub-efi-amd64`, which only reinstalls GRUB on updates on EFI
