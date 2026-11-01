@@ -1,0 +1,7 @@
+# System-wide Discover defaults for LeiOS. Users' own choices are saved in
+# ~/.config/discoverrc and take precedence.
+
+[ResourcesModel]
+# For apps that are available from several sources, preselect the Flatpak
+# (Flathub) version instead of the Debian package.
+currentApplicationBackend=flatpak-backend

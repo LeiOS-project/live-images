@@ -62,11 +62,12 @@ installed systems use. In CI, set the pipeline variables
   - `bootloaders/`: The live boot menu (GRUB, with the LeiOS GRUB theme)
   - `hooks/`: Chroot hooks executed during image creation
   - `includes.chroot/`: Files copied into the image: apt sources, the
-    Calamares installer configuration and branding, and the installer
-    launcher (live session only)
+    Flathub remote and Discover defaults, the Calamares installer
+    configuration and branding, and the installer launcher (live session only)
   - `package-lists/`: The packages of the image: `base` (system, desktop,
-    firmware, tools), `leios` (LeiOS packages: `leios.theme.aio` brings all
-    themes), `installer`, `live` and per-architecture lists
+    firmware, tools), `discover` (Discover with Flatpak and Snap), `leios`
+    (LeiOS packages: `leios.theme.aio` brings all themes), `installer`,
+    `live` and per-architecture lists
 
 ## The Installer
 
@@ -110,6 +111,27 @@ GRUB is installed; the image carries that package as a file (hook
 `grub-efi-amd64`. The `grub-install` wrapper then records the boot disk in
 `grub-pc/install_devices` (by `/dev/disk/by-id`, like the Debian installer),
 so GRUB updates also reach the disk's boot sector.
+
+## Apps: Discover, Flatpak and Snap
+
+Discover (`package-lists/discover.list.chroot`) installs apps from three
+sources: Debian and LeiOS packages (PackageKit), Flatpak and Snap.
+
+- **Flathub** is a system-wide Flatpak remote from the first start, in the live
+  session and on installed systems. Hook `9200-add-flathub-remote.hook.chroot`
+  adds it from `includes.chroot/etc/flatpak/remotes.d/flathub.flatpakrepo`
+  (Flathub's own file, with its signing key). Flatpak would also add that file
+  on its own on first use, as a preconfigured remote.
+- **Snap**: `snapd` and Discover's Snap backend; snaps come from the Snap Store.
+  As `snapd` is part of the image, every session has `/snap/bin` in `PATH`
+  and the snap apps' desktop files in `XDG_DATA_DIRS` (snapd's
+  `environment.d` and `profile.d` files), so installed snaps appear in the
+  menu right away.
+- **Default source**: for apps that exist in several sources, Discover
+  preselects the Flatpak version (`includes.chroot/etc/xdg/discoverrc`). Users
+  can pick another default in Discover's settings.
+- `kde-config-flatpak` adds a page for Flatpak app permissions to System
+  Settings.
 
 ## Customization
 

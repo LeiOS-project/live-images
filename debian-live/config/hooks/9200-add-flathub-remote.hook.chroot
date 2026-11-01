@@ -1,0 +1,13 @@
+#!/bin/sh
+
+set -e
+
+# Add Flathub as a system-wide Flatpak remote, so Discover lists Flathub apps
+# in the live session and on installed systems from the first start.
+# The remote comes from the flatpakrepo file in includes.chroot, which
+# includes Flathub's signing key. Flatpak would also add it on its own on first
+# use (remotes.d); adding it here makes it independent of that.
+#
+# remote-add then fetches Flathub's metadata; without network, it only warns.
+
+flatpak remote-add --system --if-not-exists flathub /etc/flatpak/remotes.d/flathub.flatpakrepo
