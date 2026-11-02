@@ -3,6 +3,7 @@ stages:
   - prepare
   - build_and_publish_amd64
   - build_and_publish_arm64
+  - update_website
 
 variables:
   LIVE_INSTALLER_VERSION:
@@ -99,4 +100,12 @@ build-and-publish-live-iso_arm64:
 
     - echo "Build and publish job finished."
 
-
+# Rebuild and deploy the website, whose download page offers the newest image
+# in the package registry (it reads the registry while the site is generated).
+# Starts as soon as the amd64 image is published.
+update-website:
+  stage: update_website
+  needs: ["build-and-publish-live-iso_amd64"]
+  trigger:
+    project: LeiOS/Website
+    branch: main

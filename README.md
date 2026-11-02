@@ -50,7 +50,9 @@ The build runs in `tmp/build` (a copy of `debian-live/`), and the ISO ends up
 there as `leios-live-<version>-<architecture>.hybrid.iso`. `--suite` (default
 `stable`) selects the LeiOS repository suite the image installs from and that
 installed systems use. In CI, set the pipeline variables
-`LIVE_INSTALLER_VERSION` and `LEIOS_SUITE`.
+`LIVE_INSTALLER_VERSION` and `LEIOS_SUITE`. Once the amd64 image is published,
+CI triggers the pipeline of `LeiOS/Website` on `main`, which rebuilds the
+website so its download page offers the new image.
 
 ## Repository Layout
 
