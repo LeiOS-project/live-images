@@ -26,7 +26,7 @@ export class PublishingService {
 
             if (Object.keys(files).length === 0) {
                 console.log("No new files to upload for architecture:", arch);
-                return;
+                continue;
             }
 
             for (const [version, versionFiles] of Object.entries(files)) {
@@ -77,8 +77,7 @@ export class PublishingService {
             ];
 
             if (!requiredFiles.every(f => versionFiles.includes(f))) {
-                console.error("Some files are missing to create a proper Release");
-                continue;
+                throw new Error(`Some files of version ${version} (${architecture}) are missing to create a proper release.`);
             }
             if (versionFiles.length !== requiredFiles.length) {
                 continue;
@@ -116,8 +115,10 @@ export class PublishingService {
         const GIT_DEPLOY_KEY_ID = Utils.requireEnvVariable("GIT_DEPLOY_KEY_ID");
         const GIT_DEPLOY_KEY_SECRET = Utils.requireEnvVariable("GIT_DEPLOY_KEY_SECRET");
 
+        // --fail-with-body: an HTTP error (e.g. a rejected deploy token) fails the upload.
         const result = await Bun.spawn([
             "curl",
+            "--fail-with-body",
             "--location",
             "--user",
             `${GIT_DEPLOY_KEY_ID}:${GIT_DEPLOY_KEY_SECRET}`,
@@ -125,11 +126,11 @@ export class PublishingService {
             `https://git.leicraftmc.de/api/v4/projects/5/packages/generic/release-${version}/${version}/${file}`,
         ]).exited;
 
+        // A failed upload fails the publish, so CI doesn't report (and announce) an incomplete release.
         if (result !== 0) {
-            console.error(`Failed to upload file ${file} for version ${version}.`);
-        } else {
-            console.log(`Uploaded file ${file} for version ${version}.`);
+            throw new Error(`Failed to upload file ${file} for version ${version} (curl exit code ${result}).`);
         }
+        console.log(`Uploaded file ${file} for version ${version}.`);
     }
 
     private async getExistingUploadedFiles(requestedVersions: string[]): Promise<Record<string, string[]>> {
