@@ -1,0 +1,12 @@
+# Discover, the app store, with Flatpak and Snap as app sources.
+# Flathub is added by hook 9200-add-flathub-remote.hook.chroot from
+# includes.chroot/etc/flatpak/remotes.d/flathub.flatpakrepo, and Discover
+# prefers Flatpak for apps that exist in several sources
+# (includes.chroot/etc/xdg/discoverrc).
+plasma-discover
+plasma-discover-backend-flatpak
+plasma-discover-backend-snap
+flatpak
+snapd
+# The Flatpak permissions page in System Settings
+kde-config-flatpak

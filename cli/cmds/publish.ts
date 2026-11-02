@@ -38,7 +38,12 @@ export class PublishCMD extends CLIBaseCommand<typeof args> {
 
     override async run(args: CLICommandArgParser.ParsedArgs<typeof this.args>, ctx: CTX): Promise<boolean> {
         const service = new PublishingService(args.flags.version ?? "auto", args.flags.architecture, ctx.get("cwd") ?? ".");
-        await service.run();
+        try {
+            await service.run();
+        } catch (err) {
+            console.error("Error during publishing:", err);
+            process.exit(1);
+        }
         return true;
     }
 

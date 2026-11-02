@@ -50,7 +50,9 @@ The build runs in `tmp/build` (a copy of `debian-live/`), and the ISO ends up
 there as `leios-live-<version>-<architecture>.hybrid.iso`. `--suite` (default
 `stable`) selects the LeiOS repository suite the image installs from and that
 installed systems use. In CI, set the pipeline variables
-`LIVE_INSTALLER_VERSION` and `LEIOS_SUITE`.
+`LIVE_INSTALLER_VERSION` and `LEIOS_SUITE`. Once the amd64 image is published,
+CI triggers the pipeline of `LeiOS/Website` on `main`, which rebuilds the
+website so its download page offers the new image.
 
 ## Repository Layout
 
@@ -62,11 +64,12 @@ installed systems use. In CI, set the pipeline variables
   - `bootloaders/`: The live boot menu (GRUB, with the LeiOS GRUB theme)
   - `hooks/`: Chroot hooks executed during image creation
   - `includes.chroot/`: Files copied into the image: apt sources, the
-    Calamares installer configuration and branding, and the installer
-    launcher (live session only)
+    Flathub remote and Discover defaults, the Calamares installer
+    configuration and branding, and the installer launcher (live session only)
   - `package-lists/`: The packages of the image: `base` (system, desktop,
-    firmware, tools), `leios` (LeiOS packages: `leios.theme.aio` brings all
-    themes), `installer`, `live` and per-architecture lists
+    firmware, tools), `discover` (Discover with Flatpak and Snap), `leios`
+    (LeiOS packages: `leios.theme.aio` brings all themes), `installer`,
+    `live` and per-architecture lists
 
 ## The Installer
 
@@ -100,6 +103,19 @@ that is still installed. The `grub-install` wrapper Calamares calls also
 installs shim and GRUB to the removable media path `/EFI/BOOT`, and Debian's
 grub packages keep that copy up to date (`grub2/force_efi_extra_removable`).
 
+### Dual boot detection
+
+Debian's GRUB only lists other operating systems (found by `os-prober`) with
+`GRUB_DISABLE_OS_PROBER=false`. The installer asks on its "Dual Boot" page
+(`packagechooser@leios-dualboot`, after the partitioning page) whether to turn
+that on; "Enable dual boot detection" is preselected. The choice is stored in
+GlobalStorage as `packagechooser_leios-dualboot`, and
+`contextualprocess@leios-dualboot` runs `/usr/libexec/leios-live/setup-os-prober`
+in the installed system before GRUB is set up. It writes the setting to
+`/etc/default/grub.d/90-leios-os-prober.cfg`, where it can be changed later.
+The page's pictures (`dualboot-*.png` in the branding directory) are
+screenshots of the LeiOS boot menu with and without Windows.
+
 ### BIOS systems
 
 The image has `grub-efi-amd64`, which only reinstalls GRUB on updates on EFI
@@ -110,6 +126,27 @@ GRUB is installed; the image carries that package as a file (hook
 `grub-efi-amd64`. The `grub-install` wrapper then records the boot disk in
 `grub-pc/install_devices` (by `/dev/disk/by-id`, like the Debian installer),
 so GRUB updates also reach the disk's boot sector.
+
+## Apps: Discover, Flatpak and Snap
+
+Discover (`package-lists/discover.list.chroot`) installs apps from three
+sources: Debian and LeiOS packages (PackageKit), Flatpak and Snap.
+
+- **Flathub** is a system-wide Flatpak remote from the first start, in the live
+  session and on installed systems. Hook `9200-add-flathub-remote.hook.chroot`
+  adds it from `includes.chroot/etc/flatpak/remotes.d/flathub.flatpakrepo`
+  (Flathub's own file, with its signing key). Flatpak would also add that file
+  on its own on first use, as a preconfigured remote.
+- **Snap**: `snapd` and Discover's Snap backend; snaps come from the Snap Store.
+  As `snapd` is part of the image, every session has `/snap/bin` in `PATH`
+  and the snap apps' desktop files in `XDG_DATA_DIRS` (snapd's
+  `environment.d` and `profile.d` files), so installed snaps appear in the
+  menu right away.
+- **Default source**: for apps that exist in several sources, Discover
+  preselects the Flatpak version (`includes.chroot/etc/xdg/discoverrc`). Users
+  can pick another default in Discover's settings.
+- `kde-config-flatpak` adds a page for Flatpak app permissions to System
+  Settings.
 
 ## Customization
 

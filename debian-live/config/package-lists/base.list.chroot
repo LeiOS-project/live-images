@@ -1,6 +1,7 @@
 # Base system of the LeiOS live image and of systems installed from it:
 # Debian's standard and KDE desktop tasks, firmware and common tools.
-# zram swap comes from leios.system.performance-tweaks.base (leios.list.chroot).
+# zram swap comes from leios.system.performance-tweaks.base (leios.list.chroot),
+# Discover's app sources from discover.list.chroot.
 adduser
 apt
 apt-listchanges
@@ -108,7 +109,6 @@ passwd
 pciutils
 perl
 perl-base
-plasma-discover-backend-flatpak
 power-profiles-daemon
 procps
 readline-common
