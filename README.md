@@ -113,7 +113,8 @@ GlobalStorage as `packagechooser_leios-dualboot`, and
 `contextualprocess@leios-dualboot` runs `/usr/libexec/leios-live/setup-os-prober`
 in the installed system before GRUB is set up. It writes the setting to
 `/etc/default/grub.d/90-leios-os-prober.cfg`, where it can be changed later.
-The page's pictures (`dualboot-*.png`) are in the branding directory.
+The page's pictures (`dualboot-*.png` in the branding directory) are
+screenshots of the LeiOS boot menu with and without Windows.
 
 ### BIOS systems
 
